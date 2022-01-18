@@ -1,0 +1,241 @@
+   PKGMK(1) User Commands PKGMK(1)
+
+NAME
+
+   pkgmk - produce an installable package
+
+SYNOPSIS
+
+   pkgmk [-o] [-a arch] [-b base_src_dir] [-d device]
+   [-f prototype] [-l limit] [-p pstamp] [-r root_path]
+   [-v version] [variable=value]... [pkginst]
+
+DESCRIPTION
+
+   The pkgmk utility produces an installable package to be used as input
+   to
+   the [1]pkgadd(1M) command. The package contents is in directory
+   structure
+   format.
+   The command uses the package [2]prototype(4) file as input and creates
+   a
+   [3]pkgmap(4) file. The contents for each entry in the prototype file is
+   copied to the appropriate output location. Information concerning the
+   contents (checksum, file size, modification date) is computed and
+   stored
+   in the pkgmap file, along with attribute information specified in the
+   prototype file.
+   pkgmk searches for the files listed in the [4]prototype(4) file as
+   described
+   in the following conditions. Note: If a prototype file contains the
+   explicit location of the file to include in the package, then the
+   following search explanations do not apply.
+   1. If neither -b nor -r options are specified, the file name
+   component of each file path listed in the [5]prototype(4) file is
+   expected to be found in the same directory as the [6]prototype(4)
+   file
+   2. If -b is specified as a relative path (without a leading "/"),
+   then base_src_dir is prepended to the relative file paths from
+   the [7]prototype(4) file. The resulting path is searched for in
+   the root_path directories. If a root_path is not specified, it
+   defaults to "/".
+   3. If -b is specified as an absolute path (with a leading "/"),
+   then base_src_dir is prepended to the relative paths from the
+   [8]prototype(4) file and the result is the location of the file.
+   root_path is not searched.
+   4. If -r is specified, then full file paths are used from the
+   [9]prototype(4) file. Relative paths have base_src_dir prepended.
+   If base_src_dir is not specified, it defaults to "". The
+   resulting path is searched for in each directory of the
+   root_path.
+   If you created your prototype file using "pkgproto a/relative/path"or
+   "pkgproto a/relative/path=install/path", you should use the -r
+   root_path
+   option to specify the location of a/relative/path so that pkgmk can
+   correctly locate your source files.
+   Package commands, including pkgmk, are [10]largefile(5)-aware. They
+   handle
+   files larger than 2 GB in the same way they handle smaller files. In
+   their current implementations, [11]pkgadd(1M), [12]pkgtrans(1) and
+   other package
+   commands can process a datastream of up to 4 GB.
+
+OPTIONS
+
+   The following options are supported:
+   -a arch
+   Overrides the architecture information provided in the
+   [13]pkginfo(4) file with arch.
+   -b base_src_dir
+   Prepends the indicated base_src_dir to locate
+   relocatable objects on the source machine. Use this
+   option to search for all objects in the prototype
+   file. pkgmk expects to find the objects in
+   /base_src_dir or to locate the objects by use of the
+   -b and -r options, respectively.
+   -d device
+   Creates the package on device. device can be an
+   absolute directory pathname or the identifiers for a
+   floppy disk or removable disk (for example,
+   /dev/diskette). The default device is the installation
+   spool directory (/var/spool/pkg).
+   -f prototype
+   Uses the file prototype as input to the command. The
+   default prototype filename is [Pp]rototype.
+   -l limit
+   Specifies the maximum size in 512 byte blocks of the
+   output device as limit. By default, if the output file
+   is a directory or a mountable device, pkgmk employs
+   the [14]df(1M) command to dynamically calculate the amount
+   of available space on the output device. This option
+   is useful in conjunction with [15]pkgtrans(1) to create a
+   package with a datastream format.
+   -o
+   Overwrites the same instance; package instance is
+   overwritten if it already exists.
+   -p pstamp
+   Overrides the production stamp definition in the
+   [16]pkginfo(4) file with pstamp.
+   -r root_path
+   Uses the indicated root_path with the source pathname
+   appended to locate objects on the source machine,
+   using a comma (,) as the separator for the path
+   elements. If this option is specified, look for the
+   full destination path in each of the directories
+   specified. If neither -b nor -r is specified, look for
+   the leaf filename in the current directory.
+   -v version
+   Overrides the version information provided in the
+   [17]pkginfo(4) file with version.
+   variable=value
+   Places the indicated variable in the packaging
+   environment. (See [18]prototype(4) for definitions of
+   variable specifications.)
+
+OPERANDS
+
+   The following operand is supported:
+   pkginst
+   A package designation by its instance. An instance can be the
+   package abbreviation or a specific instance (for example,
+   inst.1 or inst.2). All instances of a package can be requested
+   by inst.*. The asterisk character (*) is a special character
+   to some shells and might need to be escaped. In the C-Shell, *
+   must be surrounded by single quotes (') or preceded by a
+   backslash (\).
+
+EXIT STATUS
+
+   The following exit values are returned:
+   0
+   Successful completion.
+   >0
+   An error occurred.
+
+SEE ALSO
+
+   [19]pkgparam(1), [20]pkgproto(1), [21]pkgtrans(1), [22]uname(1),
+   [23]df(1M), [24]pkgadd(1M),
+   [25]pkginfo(4), [26]pkgmap(4), [27]prototype(4), [28]attributes(5),
+   [29]largefile(5)
+   Application Packaging Developer's Guide
+
+NOTES
+
+   Architecture information is provided on the command line with the -a
+   option or in the [30]prototype(4) file. If no architecture information
+   is
+   supplied, pkgmk uses the output of uname -m (see [31]uname(1)).
+   Version information is provided on the command line with the -v option
+   or
+   in the [32]pkginfo(4) file. If no version information is supplied, a
+   default
+   based on the current date is provided.
+   Command line definitions for both architecture and version override the
+   [33]prototype(4) definitions.
+   pkgmk fails if one of the following invalid combinations of
+   zone-related
+   parameters is used:
+   1. Both SUNW_PKG_ALLZONES and SUNW_PKG_THISZONE are set to TRUE.
+   2. SUNW_PKG_HOLLOW is set to TRUE and SUNW_PKG_ALLZONES is set to
+   FALSE.
+   3. The package contains a request script and SUNW_PKG_THISZONE
+   set to TRUE.
+   For additional information regarding these parameters, see
+   [34]pkginfo(4).
+   October 30, 2007 [35]PKGMK(1)
+
+References
+
+   Visible links:
+   1. https://illumos.org/man/1M/pkgadd
+   2. https://illumos.org/man/4/prototype
+   3. https://illumos.org/man/4/pkgmap
+   4. https://illumos.org/man/4/prototype
+   5. https://illumos.org/man/4/prototype
+   6. https://illumos.org/man/4/prototype
+   7. https://illumos.org/man/4/prototype
+   8. https://illumos.org/man/4/prototype
+   9. https://illumos.org/man/4/prototype
+  10. https://illumos.org/man/5/largefile
+  11. https://illumos.org/man/1M/pkgadd
+  12. https://illumos.org/man/1/pkgtrans
+  13. https://illumos.org/man/4/pkginfo
+  14. https://illumos.org/man/1M/df
+  15. https://illumos.org/man/1/pkgtrans
+  16. https://illumos.org/man/4/pkginfo
+  17. https://illumos.org/man/4/pkginfo
+  18. https://illumos.org/man/4/prototype
+  19. https://illumos.org/man/1/pkgparam
+  20. https://illumos.org/man/1/pkgproto
+  21. https://illumos.org/man/1/pkgtrans
+  22. https://illumos.org/man/1/uname
+  23. https://illumos.org/man/1M/df
+  24. https://illumos.org/man/1M/pkgadd
+  25. https://illumos.org/man/4/pkginfo
+  26. https://illumos.org/man/4/pkgmap
+  27. https://illumos.org/man/4/prototype
+  28. https://illumos.org/man/5/attributes
+  29. https://illumos.org/man/5/largefile
+  30. https://illumos.org/man/4/prototype
+  31. https://illumos.org/man/1/uname
+  32. https://illumos.org/man/4/pkginfo
+  33. https://illumos.org/man/4/prototype
+  34. https://illumos.org/man/4/pkginfo
+  35. https://illumos.org/man/1/PKGMK
+
+   Hidden links:
+  37. https://illumos.org/man/1M/pkgadd
+  38. https://illumos.org/man/4/prototype
+  39. https://illumos.org/man/4/pkgmap
+  40. https://illumos.org/man/4/prototype
+  41. https://illumos.org/man/4/prototype
+  42. https://illumos.org/man/4/prototype
+  43. https://illumos.org/man/4/prototype
+  44. https://illumos.org/man/4/prototype
+  45. https://illumos.org/man/4/prototype
+  46. https://illumos.org/man/5/largefile
+  47. https://illumos.org/man/1M/pkgadd
+  48. https://illumos.org/man/1/pkgtrans
+  49. https://illumos.org/man/4/pkginfo
+  50. https://illumos.org/man/1M/df
+  51. https://illumos.org/man/1/pkgtrans
+  52. https://illumos.org/man/4/pkginfo
+  53. https://illumos.org/man/4/pkginfo
+  54. https://illumos.org/man/4/prototype
+  55. https://illumos.org/man/1/pkgparam
+  56. https://illumos.org/man/1/pkgproto
+  57. https://illumos.org/man/1/pkgtrans
+  58. https://illumos.org/man/1/uname
+  59. https://illumos.org/man/1M/df
+  60. https://illumos.org/man/1M/pkgadd
+  61. https://illumos.org/man/4/pkginfo
+  62. https://illumos.org/man/4/pkgmap
+  63. https://illumos.org/man/4/prototype
+  64. https://illumos.org/man/5/attributes
+  65. https://illumos.org/man/5/largefile
+  66. https://illumos.org/man/4/prototype
+  67. https://illumos.org/man/1/uname
+  68. https://illumos.org/man/4/pkginfo
+  69. https://illumos.org/man/4/prototype
+  70. https://illumos.org/man/4/pkginfo

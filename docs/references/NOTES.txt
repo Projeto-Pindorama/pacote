@@ -1,0 +1,2 @@
+All documents and files here belong to their respective authors, i.e. the main
+project license file does not apply to the contents in this directory.

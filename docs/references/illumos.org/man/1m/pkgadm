@@ -1,0 +1,158 @@
+   PKGADM(1M) Maintenance Commands PKGADM(1M)
+
+NAME
+
+   pkgadm - manage packaging system
+
+SYNOPSIS
+
+   pkgadm dbstatus [-R rootpath]
+   pkgadm sync [-R rootpath] [-q]
+   pkgadm -V
+   pkgadm -?
+
+DESCRIPTION
+
+   The pkgadm utility is used for managing the packaging system. It has
+   several subcommands that perform various operations relating to
+   packaging.
+   sync
+   Writes the contents file and rolls the contents log file. With use of
+   the -q option, forces the contents file server to quit.
+
+Internal Install Database
+
+   The Solaris operating system relies upon enhanced System V revision 4
+   (SVr4) packages as the basis for its software installation and revision
+   management. The package maintenance software stores information about
+   installed packages in an internal database. The pkgadm subcommand
+   dbstatus is used to determine how the package internal database is
+   implemented. The dbstatus command returns a string that indicates the
+   type of internal database in use. In the current implementation, the
+   dbstatus command always returns the string text, which indicates that
+   the
+   [1]contents(4) package database is in use. Future releases of Solaris
+   might
+   supply alternative database implementations.
+
+OPTIONS
+
+   The following options are supported:
+   -q
+   (Applies to sync subcommand.) Shuts down the contents file cache
+   daemon.
+   -R rootpath
+   Defines the full name of a directory to use as the root (/) path.
+   Note -
+   The root file system of any non-global zones must not be referenced
+   with the -R option. Doing so might damage the global zone's file
+   system, might compromise the security of the global zone, and might
+   damage the non-global zone's file system. See [2]zones(5).
+   -V
+   Print version associated with packaging tools.
+   -?
+   Print help message.
+
+EXAMPLES
+
+Example 1: Synchronizing the contents file
+
+   The following example forces any pending changes to the [3]contents(4)
+   file
+   to be flushed and the pkgserv daemon to shut down.
+   example% pkgadm sync -q
+
+EXIT STATUS
+
+   0
+   successful completion
+   non-zero
+   fatal error
+
+ATTRIBUTES
+
+   See [4]attributes(5) for descriptions of the following attributes:
+   +--------------------+-----------------+
+   | ATTRIBUTE TYPE | ATTRIBUTE VALUE |
+   +--------------------+-----------------+
+   |Interface Stability | Evolving |
+   +--------------------+-----------------+
+
+SEE ALSO
+
+   [5]pkginfo(1), [6]pkgmk(1), [7]pkgparam(1), [8]pkgproto(1),
+   [9]pkgtrans(1), [10]svcs(1),
+   [11]installf(1M), [12]pkgadd(1M), [13]pkgask(1M), [14]pkgrm(1M),
+   [15]removef(1M), [16]svcadm(1M),
+   [17]admin(4), [18]contents(4), [19]exec_attr(4), [20]pkginfo(4),
+   [21]attributes(5), [22]rbac(5),
+   [23]smf(5)
+
+NOTES
+
+   The service for pkgadm is managed by the service management facility,
+   [24]smf(5), under the service identifier:
+   svc:/system/pkgserv
+   Administrative actions on this service, such as enabling, disabling, or
+   requesting restart, can be performed using [25]svcadm(1M). The
+   service's
+   status can be queried using the [26]svcs(1) command.
+   March 2, 2017 [27]PKGADM(1M)
+
+References
+
+   Visible links:
+   1. https://illumos.org/man/4/contents
+   2. https://illumos.org/man/5/zones
+   3. https://illumos.org/man/4/contents
+   4. https://illumos.org/man/5/attributes
+   5. https://illumos.org/man/1/pkginfo
+   6. https://illumos.org/man/1/pkgmk
+   7. https://illumos.org/man/1/pkgparam
+   8. https://illumos.org/man/1/pkgproto
+   9. https://illumos.org/man/1/pkgtrans
+  10. https://illumos.org/man/1/svcs
+  11. https://illumos.org/man/1M/installf
+  12. https://illumos.org/man/1M/pkgadd
+  13. https://illumos.org/man/1M/pkgask
+  14. https://illumos.org/man/1M/pkgrm
+  15. https://illumos.org/man/1M/removef
+  16. https://illumos.org/man/1M/svcadm
+  17. https://illumos.org/man/4/admin
+  18. https://illumos.org/man/4/contents
+  19. https://illumos.org/man/4/exec_attr
+  20. https://illumos.org/man/4/pkginfo
+  21. https://illumos.org/man/5/attributes
+  22. https://illumos.org/man/5/rbac
+  23. https://illumos.org/man/5/smf
+  24. https://illumos.org/man/5/smf
+  25. https://illumos.org/man/1M/svcadm
+  26. https://illumos.org/man/1/svcs
+  27. https://illumos.org/man/1M/PKGADM
+
+   Hidden links:
+  29. https://illumos.org/man/4/contents
+  30. https://illumos.org/man/5/zones
+  31. https://illumos.org/man/5/attributes
+  32. https://illumos.org/man/1/pkginfo
+  33. https://illumos.org/man/1/pkgmk
+  34. https://illumos.org/man/1/pkgparam
+  35. https://illumos.org/man/1/pkgproto
+  36. https://illumos.org/man/1/pkgtrans
+  37. https://illumos.org/man/1/svcs
+  38. https://illumos.org/man/1M/installf
+  39. https://illumos.org/man/1M/pkgadd
+  40. https://illumos.org/man/1M/pkgask
+  41. https://illumos.org/man/1M/pkgrm
+  42. https://illumos.org/man/1M/removef
+  43. https://illumos.org/man/1M/svcadm
+  44. https://illumos.org/man/4/admin
+  45. https://illumos.org/man/4/contents
+  46. https://illumos.org/man/4/exec_attr
+  47. https://illumos.org/man/4/pkginfo
+  48. https://illumos.org/man/5/attributes
+  49. https://illumos.org/man/5/rbac
+  50. https://illumos.org/man/5/smf
+  51. https://illumos.org/man/5/smf
+  52. https://illumos.org/man/1M/svcadm
+  53. https://illumos.org/man/1/svcs

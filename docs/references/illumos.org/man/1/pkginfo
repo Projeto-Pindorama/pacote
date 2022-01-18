@@ -1,0 +1,139 @@
+   PKGINFO(1) User Commands PKGINFO(1)
+
+NAME
+
+   pkginfo - display software package information
+
+SYNOPSIS
+
+   pkginfo [-q | -x | -l] [-p | -i] [-r] [-a arch]
+   [-v version] [-c category]... [pkginst]...
+   pkginfo [-d device] [-R root_path] [-q | -x | -l] [-a arch]
+   [-v version] [-c category]... [pkginst]...
+
+DESCRIPTION
+
+   pkginfo displays information about software packages that are installed
+   on the system (with the first synopsis) or that reside on a particular
+   device or directory (with the second synopsis).
+   Without options, pkginfo lists the primary category, package instance,
+   and the names of all completely installed and partially installed
+   packages. It displays one line for each package selected.
+
+OPTIONS
+
+   The -p and -i options are meaningless if used in conjunction with the
+   -d
+   option.
+   The options -q, -x, and -l are mutually exclusive.
+   -a arch
+   Specify the architecture of the package as arch.
+   -c category
+   Display packages that match category. Categories are defined with
+   the CATEGORY parameter in the [1]pkginfo(4) file. If more than one
+   category is supplied, the package needs to match only one category
+   in the list. The match is not case specific.
+   -d device
+   Defines a device, device, on which the software resides. device can
+   be an absolute directory pathname or the identifiers for tape, floppy
+   disk, removable disk, and so forth. The special token spool may be
+   used to indicate the default installation spool directory
+   (/var/spool/pkg).
+   -i
+   Display information for fully installed packages only.
+   -l
+   Specify long format, which includes all available information about
+   the designated package(s).
+   -p
+   Display information for partially installed packages only.
+   -q
+   Do not list any information. Used from a program to check whether or
+   not a package has been installed.
+   -r
+   List the installation base for relocatable packages.
+   -R root_path
+   Defines the full path name of a directory to use as the root_path.
+   All files, including package system information files, are relocated
+   to a directory tree starting in the specified root_path.
+   -v version
+   Specify the version of the package as version. The version is defined
+   with the VERSION parameter in the [2]pkginfo(4) file. All compatible
+   versions can be requested by preceding the version name with a tilde
+   (~). Multiple white spaces are replaced with a single white space
+   during version comparison.
+   -x
+   Designate an extracted listing of package information. The listing
+   contains the package abbreviation, package name, package architecture
+   (if available) and package version (if available).
+
+OPERANDS
+
+   pkginst
+   A package designation by its instance. An instance can be the package
+   abbreviation or a specific instance (for example, inst.1 or inst.2).
+   All instances of a package can be requested by inst.*. The asterisk
+   character (*) is a special character to some shells and may need to
+   be escaped. In the C-Shell, "*" must be surrounded by single quotes
+   (') or preceded by a backslash (\).
+
+EXIT STATUS
+
+   0
+   Successful completion.
+   >0
+   An error occurred.
+
+FILES
+
+   /var/spool/pkg
+   default installation spool directory
+
+SEE ALSO
+
+   [3]pkgtrans(1), [4]pkgadd(1M), [5]pkgask(1M), [6]pkgchk(1M),
+   [7]pkgrm(1M), [8]pkginfo(4),
+   [9]attributes(5), [10]largefile(5)
+   Application Packaging Developer's Guide
+
+NOTES
+
+   Package commands are [11]largefile(5)-aware. They handle files larger
+   than 2
+   GB in the same way they handle smaller files. In their current
+   implementations, [12]pkgadd(1M), [13]pkgtrans(1) and other package
+   commands can
+   process a datastream of up to 4 GB.
+   October 30, 2007 [14]PKGINFO(1)
+
+References
+
+   Visible links:
+   1. https://illumos.org/man/4/pkginfo
+   2. https://illumos.org/man/4/pkginfo
+   3. https://illumos.org/man/1/pkgtrans
+   4. https://illumos.org/man/1M/pkgadd
+   5. https://illumos.org/man/1M/pkgask
+   6. https://illumos.org/man/1M/pkgchk
+   7. https://illumos.org/man/1M/pkgrm
+   8. https://illumos.org/man/4/pkginfo
+   9. https://illumos.org/man/5/attributes
+  10. https://illumos.org/man/5/largefile
+  11. https://illumos.org/man/5/largefile
+  12. https://illumos.org/man/1M/pkgadd
+  13. https://illumos.org/man/1/pkgtrans
+  14. https://illumos.org/man/1/PKGINFO
+
+   Hidden links:
+  16. https://illumos.org/man/4/pkginfo
+  17. https://illumos.org/man/4/pkginfo
+  18. https://illumos.org/man/1/pkgtrans
+  19. https://illumos.org/man/1M/pkgadd
+  20. https://illumos.org/man/1M/pkgask
+  21. https://illumos.org/man/1M/pkgchk
+  22. https://illumos.org/man/1M/pkgrm
+  23. https://illumos.org/man/4/pkginfo
+  24. https://illumos.org/man/5/attributes
+  25. https://illumos.org/man/5/largefile
+  26. https://illumos.org/man/5/largefile
+  27. https://illumos.org/man/1M/pkgadd
+  28. https://illumos.org/man/1/pkgtrans

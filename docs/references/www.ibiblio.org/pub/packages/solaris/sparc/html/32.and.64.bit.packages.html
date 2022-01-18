@@ -1,0 +1,66 @@
+<HTML>
+<HEAD>
+<TITLE>Solaris 32 and 64 bit Packages</TITLE>
+</HEAD>
+<BODY BGCOLOR="FFFFFF">
+<TABLE WIDTH="500" BORDER="0" CELLPADDING="5">
+<TR>
+<TD ALIGN="LEFT" BGCOLOR="#FFFFFF"><B>Document</B></TD>
+<TD ALIGN="RIGHT" BGCOLOR="#D0D0D0"><FONT SIZE="+2"><CENTER><B>Solaris 32 and 64 bit Packages</B></CENTER></FONT></TD>
+</TR>
+<TR>
+<TD ALIGN="LEFT" BGCOLOR="#FFFFFF"><B>Author</B></TD>
+<TD ALIGN="RIGHT" BGCOLOR="#D0D0D0"><CENTER>Mark &lt;mark&#64ibiblio.org&gt;</CENTER></TD>
+</TR>
+</TABLE>
+<BR>
+Since Solaris 7 was released any machine with an UltraSPARC
+(<FONT FACE="Courier New" SIZE="-1">sun4u</FONT>) CPU
+installed, such as an Ultra 1, 2, E3000, E6500, E10000 etc, could all run
+either a 32 bit or 64 bit kernel. Sun has made the step of designing the
+64 bit capability to get the most out of their UltraSPARC chips and to
+allow very very large limits on what you can do with their machines<BR>
+<BR>
+If you have a <FONT FACE="Courier New" SIZE="-1">sun4u</FONT> UltraSPARC
+machine then you may be running a 64 bit kernel. You can use:<OL>
+<FONT FACE="Courier New" SIZE="-1">
+% uname -m<BR>
+</FONT>
+</OL>
+to determine your chip type. A response of <FONT FACE="Courier New" SIZE="-1">sun4u</FONT>
+means you are running on an UltraSPARC machine.<BR>
+You can determine the currently running kernel with this command:<BR>
+<OL>
+<FONT FACE="Courier New" SIZE="-1">
+% isainfo -v<BR>
+64-bit sparcv9 applications<BR>
+32-bit sparc applications<BR>
+%<BR>
+</FONT>
+</OL>
+As you can see, this machine is able to run 64 bit applications, thus it
+has a 64 bit kernel running. If you only saw a 32-bit response or even
+"Command not found" then you are running with a 32 bit kernel.<BR>
+<BR>
+The nice thing about running with a 64 bit kernel, apart from the much
+bigger addressing limits, is that you can still use the vast majority of
+the 32 bit programs, and in this case, Solaris packages. Often you won't
+notice any difference whatsoever in speed, and the operating system works
+just the same. That means you can use all the software for a 32 bit
+machine, and if you do have a 64 bit package available then you can choose
+to install that instead and use that software in native 64 bit mode.<BR>
+<BR>
+Of course if you have a 32 bit kernel, you can only use the 32 bit
+packages.<BR>
+<BR>
+One does have to be careful with programs that go diving into the kernel
+to access information, the <FONT FACE="Courier New" SIZE="-1">top</FONT>
+package being an example. If you use a 32 bit
+<FONT FACE="Courier New" SIZE="-1">top</FONT> on a 64 bit machine it
+might just work, but it's more likely to fail or give undefined results.<BR>
+<BR>
+More information on 32 and 64 packages on Solaris 7 is available
+<A HREF="http://www.sunworld.com/swol-11-1998/swol-11-insidesolaris.html?1101a">here</A>.
+<BR>
+</BODY>
+</HTML>

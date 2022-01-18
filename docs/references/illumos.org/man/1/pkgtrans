@@ -1,0 +1,225 @@
+   PKGTRANS(1) User Commands PKGTRANS(1)
+
+NAME
+
+   pkgtrans - translate package format
+
+SYNOPSIS
+
+   pkgtrans [-inos] device1 device2 [pkginst]...
+
+DESCRIPTION
+
+   The pkgtrans utility translates an installable package from one format
+   to
+   another. It translates:
+   o a file system format to a datastream
+   o a datastream to a file system format
+   o one file system format to another file system format
+
+OPTIONS
+
+   The options and arguments for this command are:
+   -i
+   Copies only the [1]pkginfo(4) and [2]pkgmap(4) files.
+   -n
+   Creates a new instance of the package on the destination
+   device if any instance of this package already exists, up
+   to the number specified by the MAXINST variable in the
+   [3]pkginfo(4) file.
+   -o
+   Overwrites the same instance on the destination device.
+   Package instance will be overwritten if it already exists.
+   -s
+   Indicates that the package should be written to device2 as
+   a datastream rather than as a file system. The default
+   behavior is to write a file system format on devices that
+   support both formats.
+
+OPERANDS
+
+   device1
+   Indicates the source device. The package or packages on this
+   device will be translated and placed on device2. See DEVICE
+   SPECIFIERS, below.
+   device2
+   Indicates the destination device. Translated packages will be
+   placed on this device. See DEVICE SPECIFIERS, below.
+   pkginst
+   Specifies which package instance or instances on device1
+   should be translated. The token all may be used to indicate
+   all packages. pkginst.* can be used to indicate all instances
+   of a package. If no packages are defined, a prompt shows all
+   packages on the device and asks which to translate.
+   The asterisk character (*) is a special character to some
+   shells and may need to be escaped. In the C-Shell, the * must
+   be surrounded by single quotes (') or preceded by a backslash
+   (\).
+
+DEVICE SPECIFIERS
+
+   Packaging tools, including pkgtrans, [4]pkgadd(1M), and [5]pkgchk(1M),
+   have
+   options for specifying a package location by specifying the device on
+   which it resides. Listed below are the device types that a package can
+   be
+   stored to and retrieved from. Note that source and destination devices
+   cannot be the same.
+   device
+   Packages can be stored to a character or block device by
+   specifying the device identifier as the device. Common
+   examples of this device type are /dev/rmt/0 for a
+   removable magnetic tape and /floppy/floppy0 for the first
+   floppy disk on the system. pkgtrans can also produce
+   regular file system files in a stream format, which is
+   suitable for storage on a character device, web server,
+   or as input to [6]pkgadd(1M).
+   device alias
+   Devices that have been specified in /etc/device.tab are
+   eligible for being the recipient or source of a package.
+   Common examples of this type of device specification are
+   spool (the default package device location) and disk1.
+   These names correspond to devices specified in
+   /etc/device.tab
+   directory
+   Packages can be stored onto a directory by specifying an
+   absolute path to a file system directory. The package
+   contents reside in a directory within the specified
+   directory. The package directory name must be identical
+   to its PKG specification in the [7]pkginfo(4) file. An
+   example device specification of this type is
+   /export/packages.
+
+EXAMPLES
+
+Example 1: Translating All Packages on the Floppy Disk
+
+   The following example translates all packages on the floppy drive
+   /dev/diskette and places the translations on /tmp:
+   example% pkgtrans /dev/diskette /tmp all
+
+Example 2: Translating Packages on /tmp
+
+   The following example translates packages pkg1 and pkg2 on /tmp and
+   places their translations (that is, a datastream) on the 9track1 output
+   device:
+   example% pkgtrans /tmp 9track1 pkg1 pkg2
+
+Example 3: Translating Packages on /tmp
+
+   The following example translates pkg1 and pkg2 on /tmp and places them
+   on
+   the diskette in a datastream format:
+   example% pkgtrans -s /tmp /dev/diskette pkg1 pkg2
+
+Example 4: Translating a Package Datastream
+
+   The following example translates a package datastream into a file
+   system
+   format package:
+   example% pkgtrans /tmp/pkg1.pkg ~/tmp pkg1
+
+ENVIRONMENT VARIABLES
+
+   The MAXINST variable is set in the [8]pkginfo(4) file and declares the
+   maximum number of package instances.
+
+EXIT STATUS
+
+   0
+   Successful completion.
+   >0
+   An error occurred.
+
+ATTRIBUTES
+
+   See [9]attributes(5) for descriptions of the following attributes:
+   +--------------------+-----------------+
+   | ATTRIBUTE TYPE | ATTRIBUTE VALUE |
+   +--------------------+-----------------+
+   |Interface Stability | See below. |
+   +--------------------+-----------------+
+   The command-line syntax is Evolving.
+
+SEE ALSO
+
+   [10]pkginfo(1), [11]pkgmk(1), [12]pkgparam(1), [13]pkgproto(1),
+   [14]installf(1M), [15]pkgadd(1M),
+   [16]pkgask(1M), [17]pkgrm(1M), [18]removef(1M), [19]pkginfo(4),
+   [20]pkgmap(4), [21]attributes(5),
+   [22]largefile(5)
+   Application Packaging Developer's Guide
+
+NOTES
+
+   By default, pkgtrans does not translate any instance of a package if
+   any
+   instance of that package already exists on the destination device.
+   Using
+   the -n option creates a new instance if an instance of this package
+   already exists. Using the -o option overwrites an instance of this
+   package if it already exists. Neither of these options are useful if
+   the
+   destination device is a datastream.
+   Package commands are [23]largefile(5)-aware. They handle files larger
+   than 2
+   GB in the same way they handle smaller files. In their current
+   implementations, [24]pkgadd(1M), pkgtrans and other package commands
+   can
+   process a datastream of up to 4 GB.
+   March 2, 2017 [25]PKGTRANS(1)
+
+References
+
+   Visible links:
+   1. https://illumos.org/man/4/pkginfo
+   2. https://illumos.org/man/4/pkgmap
+   3. https://illumos.org/man/4/pkginfo
+   4. https://illumos.org/man/1M/pkgadd
+   5. https://illumos.org/man/1M/pkgchk
+   6. https://illumos.org/man/1M/pkgadd
+   7. https://illumos.org/man/4/pkginfo
+   8. https://illumos.org/man/4/pkginfo
+   9. https://illumos.org/man/5/attributes
+  10. https://illumos.org/man/1/pkginfo
+  11. https://illumos.org/man/1/pkgmk
+  12. https://illumos.org/man/1/pkgparam
+  13. https://illumos.org/man/1/pkgproto
+  14. https://illumos.org/man/1M/installf
+  15. https://illumos.org/man/1M/pkgadd
+  16. https://illumos.org/man/1M/pkgask
+  17. https://illumos.org/man/1M/pkgrm
+  18. https://illumos.org/man/1M/removef
+  19. https://illumos.org/man/4/pkginfo
+  20. https://illumos.org/man/4/pkgmap
+  21. https://illumos.org/man/5/attributes
+  22. https://illumos.org/man/5/largefile
+  23. https://illumos.org/man/5/largefile
+  24. https://illumos.org/man/1M/pkgadd
+  25. https://illumos.org/man/1/PKGTRANS
+
+   Hidden links:
+  27. https://illumos.org/man/4/pkginfo
+  28. https://illumos.org/man/4/pkgmap
+  29. https://illumos.org/man/4/pkginfo
+  30. https://illumos.org/man/1M/pkgadd
+  31. https://illumos.org/man/1M/pkgchk
+  32. https://illumos.org/man/1M/pkgadd
+  33. https://illumos.org/man/4/pkginfo
+  34. https://illumos.org/man/4/pkginfo
+  35. https://illumos.org/man/5/attributes
+  36. https://illumos.org/man/1/pkginfo
+  37. https://illumos.org/man/1/pkgmk
+  38. https://illumos.org/man/1/pkgparam
+  39. https://illumos.org/man/1/pkgproto
+  40. https://illumos.org/man/1M/installf
+  41. https://illumos.org/man/1M/pkgadd
+  42. https://illumos.org/man/1M/pkgask
+  43. https://illumos.org/man/1M/pkgrm
+  44. https://illumos.org/man/1M/removef
+  45. https://illumos.org/man/4/pkginfo
+  46. https://illumos.org/man/4/pkgmap
+  47. https://illumos.org/man/5/attributes
+  48. https://illumos.org/man/5/largefile
+  49. https://illumos.org/man/5/largefile
+  50. https://illumos.org/man/1M/pkgadd

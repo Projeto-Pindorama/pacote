@@ -1,0 +1,428 @@
+   PKGINFO(4) File Formats and Configurations PKGINFO(4)
+
+NAME
+
+   pkginfo - package characteristics file
+
+DESCRIPTION
+
+   pkginfo is an ASCII file that describes the characteristics of the
+   package along with information that helps control the flow of
+   installation. It is created by the software package developer.
+   Each entry in the pkginfo file is a line that establishes the value of
+   a
+   parameter in the following form:
+   PARAM="value"
+   There is no required order in which the parameters must be specified
+   within the file. The PKG, NAME, ARCH, VERSION and CATEGORY parameters
+   are
+   mandatory. Other parameters are optional.
+   pkginfo provides optional parameters and an environment variable in
+   support of the zones (multiple Solaris environments) feature. See
+   [1]zones(5).
+   The following parameters are mandatory:
+   ARCH
+   A comma-separated list of alphanumeric tokens that indicate the
+   architecture associated with the package. The [2]pkgmk(1) tool can be
+   used to create or modify this value when actually building the
+   package. The maximum length of a token is 16 characters and it cannot
+   include a comma.
+   Solaris's installation software meaningfully uses only one
+   architecture token of the form:
+   <instruction_set_architecture>[.<platform_group>]
+   where platform_group is intended only for Solaris installation
+   packages. Third party application software should restrict itself to
+   ARCH values from the following Solaris-supported instruction set
+   architectures (uname -p): sparc, i386, and ppc. Examples of Solaris'
+   platform groups (uname -m) are sun4u for the SPARC instruction set
+   and i86pc for the i386 instruction set. See [3]uname(1) and
+   [4]isalist(1)
+   for more details.
+   CATEGORY
+   A comma-separated list of categories under which a package can be
+   displayed. A package must at least belong to the system or
+   application category. Categories are case-insensitive and can contain
+   only alphanumerics. Each category is limited in length to 16
+   characters.
+   NAME
+   Text that specifies the package name (maximum length of 256 ASCII
+   characters). Use the NAME parameter as the foundation for describing
+   the functionality and purpose of the package; spell out any acronyms
+   and avoid internal product/project code names. The DESC parameter can
+   then be used to expand the descriptive information. Use the NAME
+   parameter to state as specifically as possible the use of the
+   package, why a user would need to load it, and so on.
+   PKG
+   Abbreviation for the package being installed. All characters in the
+   abbreviation must be alphanumeric. You can also use the - and +
+   characters in the abbreviation. The first character cannot be
+   numeric, a + or a -.
+   The abbreviation is limited to a maximum length of 32 characters.
+   install, new, and all are reserved abbreviations. It is customary to
+   make the first four letters unique to your company, such as the
+   company's stock symbol.
+   VERSION
+   Text that specifies the current version associated with the software
+   package. The maximum length is 256 ASCII characters and the first
+   character cannot be a left parenthesis. The [5]pkgmk(1) tool can be
+   used
+   to create or modify this value when actually building the package.
+   Traditional Solaris practice was to assign this parameter
+   monotonically increasing Dewey decimal values of the form:
+   <major_revision>.<minor_revision>[.<micro_revision>]
+   where all the revision fields are integers. The versioning fields can
+   be extended to an arbitrary string of numbers in Dewey-decimal
+   format, if necessary.
+   The following parameters are optional:
+   BASEDIR
+   The pathname to a default directory where "relocatable" files can be
+   installed. If blank, the package is not relocatable and any files
+   that have relative pathnames are not installed. An administrator can
+   override the default directory.
+   CLASSES
+   A space-separated list of classes defined for a package. The order of
+   the list determines the order in which the classes are installed.
+   Classes listed first are installed first (on a media by media basis).
+   This parameter can be modified by the request script.
+   DESC
+   Text that describes the package (maximum length of 256 ASCII
+   characters). This parameter value is used to provide the installer
+   with a description of what the package contains and should build on
+   the description provided in the NAME parameter. Try to make the two
+   parameters work together so that a pkginfo -l provides a fairly
+   comprehensive textual description of the package.
+   EMAIL
+   An electronic address where further information is available or bugs
+   can be reported (maximum length of 256 ASCII characters).
+   HOTLINE
+   Phone number and/or mailing address where further information can be
+   received or bugs can be reported (maximum length of 256 ASCII
+   characters).
+   INTONLY
+   Indicates that the package should only be installed interactively
+   when set to any non-null value.
+   ISTATES
+   A list of allowable run states for package installation (for example,
+   "S s 1" allows run states of S, s or 1). The Solaris operating
+   environment supports the run levels s, S, 0, 1, 2, 3, 5, and 6.
+   Applicable run levels for this parameter are s, S, 1, 2, and 3. See
+   [6]init(1M) for details.
+   MAXINST
+   The maximum number of package instances that should be allowed on a
+   machine at the same time. By default, only one instance of a package
+   is allowed. This parameter must be set in order to have multiple
+   instances of a package. In order to support multiple instances of
+   packages (for example, packages that differ in their ARCH or VERSION
+   parameter value), the value of this parameter must be high enough to
+   allow for all instances of a given package, including multiple
+   versions coexisting on a software server.
+   ORDER
+   A list of classes defining the order in which they should be put on
+   the medium. Used by [7]pkgmk(1) in creating the package. Classes not
+   defined in this field are placed on the medium using the standard
+   ordering procedures.
+   PSTAMP
+   Production stamp used to mark the [8]pkgmap(4) file on the output
+   volumes. Provides a means for distinguishing between production
+   copies of a version if more than one is in use at a time. If PSTAMP
+   is not defined, the default is used. The default consists of the UNIX
+   system machine name followed by the string "YYYYMMDDHHMMSS" (year,
+   month, date, hour, minutes, seconds).
+   RSTATES
+   A list of allowable run states for package removal (for example, "S s
+   1" allows run states of S, s or 1). The Solaris operating environment
+   supports the run levels s, S, 0, 1, 2, 3, 5, and 6. Applicable run
+   levels for this parameter are s, S, 1, 2, and 3 See [9]init(1M) for
+   details.
+   SUNW_ISA
+   Solaris-only optional parameter that indicates a software package
+   contains 64-bit objects if it is set to sparcv9. If this parameter is
+   not set, the default ISA (instruction set architecture) is set to the
+   value of the ARCH parameter.
+   SUNW_PKG_DIR
+   A value set by pkgadd that contains the location of the installing
+   package. This value is provided to any install time package procedure
+   scripts that need to know where the installing package is located.
+   This parameter should never be set manually from within a pkginfo
+   file.
+   SUNW_PKG_ALLZONES
+   Defines whether a package, when installed, must be installed and must
+   be identical in all zones. Assigned value can be true or false. The
+   default value is false. The setting of SUNW_PKG_ALLZONES has the
+   effects described below.
+   If set to true, the following conditions are in effect:
+   o The package must be installed in the global zone.
+   o The package must be installed in any non-global zone that
+   is created.
+   o The package must be identical in all zones.
+   o The package can be installed only by the global zone
+   administrator.
+   o The package cannot be installed by a non-global zone
+   administrator.
+   If set to false, the following conditions are in effect:
+   o The package is not required to be installed in all zones.
+   o The package is not required to be identical across all
+   zones.
+   o The package can be installed by the global zone
+   administrator or by a non-global zone administrator.
+   Packages that must be identical across all zones must set this
+   variable to true. This would include packages that deliver components
+   that are part of the core operating system, or that are dependent on
+   interfaces exported by the core operating system, or that deliver
+   device drivers, or runtime libraries that use or export operating
+   system interfaces that are not guaranteed to be stable across minor
+   releases.
+   Packages that deliver components that are not part of the core
+   operating system (such as application programs) that can be different
+   between any two zones must set this variable to false.
+   With respect to SUNW_PKG_ALLZONES, keep in mind the following:
+   o Use of pkgadd in the global zone installs packages in all
+   zones unless -G is specified, in which case packages are
+   installed in the global zone only. The setting of
+   SUNW_PKG_ALLZONES does not change this behavior. For
+   example, a package that has a setting of
+   SUNW_PKG_ALLZONES=false is not installed in the global
+   zone only.
+   o The SUNW_PKG_ALLZONES attribute controls whether a package
+   must be installed in all zones (and must be the same in
+   all zones) when it is installed.
+   o Use of the -G option to pkgadd with a package that has
+   SUNW_PKG_ALLZONES=true is an error and causes installation
+   of that package to fail.
+   SUNW_PKG_HOLLOW
+   Defines whether a package should be visible in any non-global zone if
+   that package is required to be installed and be identical in all
+   zones (for example, a package that has SUNW_PKG_ALLZONES=true).
+   Assigned value can be true or false. The default value is false. The
+   package is not required to be installed, but if it is installed, the
+   setting of SUNW_PKG_HOLLOW has the effects described below.
+   If set to false, the following conditions are in effect:
+   o If installed in the global zone, the package content and
+   installation information are required in all non-global
+   zones.
+   o Software delivered by the package is visible in all non-
+   global zones. An example of such a a package is the
+   package that delivers the [10]truss(1) command.
+   If set to true, the following conditions are in effect:
+   o The package content is not delivered on any non-global
+   zone. However, the package installation information is
+   required on all non-global zones.
+   o The package delivers software that should not be visible
+   in all non-global zones. Examples include kernel drivers
+   and system configuration files that work only in the
+   global zone. This setting allows the non-global zone to
+   resolve dependencies on packages that are installed only
+   in the global zone without actually installing the package
+   data.
+   o In the global zone, the package is recognized as having
+   been installed, and all components of the package are
+   installed. Directories are created, files are installed,
+   and class action and other scripts are run as appropriate
+   when the package is installed.
+   o In a non-global zone, the package is recognized as having
+   been installed, but no components of the package are
+   installed. No directories are created, no files are
+   installed, and no class action or other install scripts
+   are run when the package is installed.
+   o When removed from the global zone, the package is
+   recognized as having been completely installed.
+   Appropriate directories and files are removed, and class
+   action or other install scripts are run when the package
+   is removed.
+   o When removed from a non-global zone, the package is
+   recognized as not having been completely installed. No
+   directories are removed, no files are removed, and no
+   class action or other install scripts are run when the
+   package is removed.
+   o The package is recognized as being installed in all zones
+   for purposes of dependency checking by other packages that
+   rely on this package being installed.
+   If SUNW_PKG_ALLZONES is set to false, the value of this variable has
+   no meaning. It is a package construction error to set
+   SUNW_PKG_ALLZONES to false, then set SUNW_PKG_HOLLOW to true.
+   SUNW_PKG_THISZONE
+   Defines whether a package must be installed in the current zone only.
+   Assigned value can be true or false. The default value is false. The
+   setting of SUNW_PKG_THISZONE has the effects described below.
+   If set to true, the following conditions are in effect:
+   o The package is installed in the current zone only.
+   o If installed in the global zone, the package is not added
+   to any currently existing or yet-to-be-created non-global
+   zones. This is the same behavior that would occur if the
+   -G option were specified to pkgadd.
+   If set to false, the following conditions are in effect:
+   o If pkgadd is run in a non-global zone, the package is
+   installed in the current zone only.
+   o If pkgadd is run in the global zone, the package is
+   installed in the global zone, and is also installed in all
+   currently installed non-global zones. In addition, the
+   package will be propagated to all future, newly installed
+   non-global zones.
+   SUNW_PKGVERS
+   Solaris-only parameter indicating of version of the Solaris operating
+   environment package interface.
+   SUNW_PKGVERS="<sunw_package_version>"
+   where <sunw_package_version> has the form x.y[.z] and x, y, and z are
+   integers. For packages built for this release and previous releases,
+   use SUNW_PKGVERS="1.0".
+   SUNW_PRODNAME
+   Solaris-only parameter indicating the name of the product this
+   package is a part of or comprises (maximum length of 256 ASCII
+   characters). A few examples of SUNW_PRODNAME values are: "SunOS",
+   "OpenWindows", and "Common Desktop Environment".
+   SUNW_PRODVERS
+   Solaris-only parameter indicating the version or release of the
+   product described in SUNW_PRODNAME (maximum length of 256 ASCII
+   characters). For example, where SUNW_PRODNAME="SunOS", and the
+   Solaris 2.x Beta release, this string could be "5.x BETA", while for
+   the Solaris 2.x FCS release, the string would be "5.x". For Solaris
+   10, the string is "5.10". If the SUNW_PRODNAME parameter is NULL, so
+   should be the SUNW_PRODVERS parameter.
+   ULIMIT
+   If set, this parameter is passed as an argument to the [11]ulimit(1)
+   command (see [12]limit(1)), which establishes the maximum size of a
+   file
+   during installation.
+   VENDOR
+   Used to identify the vendor that holds the software copyright
+   (maximum length of 256 ASCII characters).
+   VSTOCK
+   The vendor stock number, if any, that identifies this product
+   (maximum length of 256 ASCII characters).
+   For further discussion of the zones-related parameters described above,
+   see System Administration Guide: Virtualization Using the Solaris
+   Operating System.
+
+EXAMPLES
+
+Example 1: A Sample pkginfo File
+
+   Here is a sample pkginfo file:
+   SUNW_PRODNAME="SunOS"
+   SUNW_PRODVERS="5.5"
+   SUNW_PKG_ALLZONES=false
+   SUNW_PKG_HOLLOW=false
+   PKG="SUNWesu"
+   NAME="Extended System Utilities"
+   VERSION="11.5.1"
+   ARCH="sparc"
+   VENDOR="Sun Microsystems, Inc."
+   HOTLINE="Please contact your local service provider"
+   EMAIL=""
+   VSTOCK="0122c3f5566"
+   CATEGORY="system"
+   ISTATES="S 2"
+   RSTATES="S 2"
+
+ATTRIBUTES
+
+   See [13]attributes(5) for descriptions of the following attributes:
+   +--------------------+-------------------+
+   | ATTRIBUTE TYPE | ATTRIBUTE VALUE |
+   +--------------------+-------------------+
+   |Interface Stability | See entries below |
+   +--------------------+-------------------+
+   |PKG value | Evolving |
+   +--------------------+-------------------+
+   |VERSION value | Evolving |
+   +--------------------+-------------------+
+   |NAME value | Evolving |
+   +--------------------+-------------------+
+   |DESC value | Evolving |
+   +--------------------+-------------------+
+   |ARCH value | Evolving |
+   +--------------------+-------------------+
+   |CATEGORY value | Evolving |
+   +--------------------+-------------------+
+   |BASEDIR value | Evolving |
+   +--------------------+-------------------+
+   |ISTATES value | Evolving |
+   +--------------------+-------------------+
+   |RSTATES value | Evolving |
+   +--------------------+-------------------+
+   |MAXINST value | Evolving |
+   +--------------------+-------------------+
+   |SUNW_PKG_ALLZONES | Evolving |
+   +--------------------+-------------------+
+   |SUNW_PKG_HOLLOW | Evolving |
+   +--------------------+-------------------+
+   |SUNW_PKG_THISZONE | Evolving |
+   +--------------------+-------------------+
+   |SUNW_PRODNAME | Evolving |
+   +--------------------+-------------------+
+   |SUNW_PRODVERS | Evolving |
+   +--------------------+-------------------+
+   |SUNW_PKGVERS | Evolving |
+   +--------------------+-------------------+
+   |SUNW_PKG_DIR | Evolving |
+   +--------------------+-------------------+
+
+SEE ALSO
+
+   [14]isalist(1), [15]limit(1), [16]pkgmk(1), [17]uname(1), [18]init(1M),
+   [19]pkgmap(4),
+   [20]attributes(5), [21]zones(5)
+   Application Packaging Developer's Guide
+   System Administration Guide: Virtualization Using the Solaris Operating
+   System
+
+NOTES
+
+   Developers can define their own installation parameters by adding a
+   definition to this file. A developer-defined parameter must begin with
+   a
+   capital letter.
+   Trailing white space after any parameter value is ignored. For example,
+   VENDOR="Sun Microsystems, Inc." is the same as VENDOR="Sun
+   Microsystems,
+   Inc. ".
+   November 26, 2017 [22]PKGINFO(4)
+
+References
+
+   Visible links:
+   1. https://illumos.org/man/5/zones
+   2. https://illumos.org/man/1/pkgmk
+   3. https://illumos.org/man/1/uname
+   4. https://illumos.org/man/1/isalist
+   5. https://illumos.org/man/1/pkgmk
+   6. https://illumos.org/man/1M/init
+   7. https://illumos.org/man/1/pkgmk
+   8. https://illumos.org/man/4/pkgmap
+   9. https://illumos.org/man/1M/init
+  10. https://illumos.org/man/1/truss
+  11. https://illumos.org/man/1/ulimit
+  12. https://illumos.org/man/1/limit
+  13. https://illumos.org/man/5/attributes
+  14. https://illumos.org/man/1/isalist
+  15. https://illumos.org/man/1/limit
+  16. https://illumos.org/man/1/pkgmk
+  17. https://illumos.org/man/1/uname
+  18. https://illumos.org/man/1M/init
+  19. https://illumos.org/man/4/pkgmap
+  20. https://illumos.org/man/5/attributes
+  21. https://illumos.org/man/5/zones
+  22. https://illumos.org/man/4/PKGINFO
+
+   Hidden links:
+  24. https://illumos.org/man/5/zones
+  25. https://illumos.org/man/1/pkgmk
+  26. https://illumos.org/man/1/uname
+  27. https://illumos.org/man/1/isalist
+  28. https://illumos.org/man/1/pkgmk
+  29. https://illumos.org/man/1M/init
+  30. https://illumos.org/man/1/pkgmk
+  31. https://illumos.org/man/4/pkgmap
+  32. https://illumos.org/man/1M/init
+  33. https://illumos.org/man/1/truss
+  34. https://illumos.org/man/1/ulimit
+  35. https://illumos.org/man/1/limit
+  36. https://illumos.org/man/5/attributes
+  37. https://illumos.org/man/1/isalist
+  38. https://illumos.org/man/1/limit
+  39. https://illumos.org/man/1/pkgmk
+  40. https://illumos.org/man/1/uname
+  41. https://illumos.org/man/1M/init
+  42. https://illumos.org/man/4/pkgmap
+  43. https://illumos.org/man/5/attributes
+  44. https://illumos.org/man/5/zones

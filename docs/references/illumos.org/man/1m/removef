@@ -1,0 +1,159 @@
+   REMOVEF(1M) Maintenance Commands REMOVEF(1M)
+
+NAME
+
+   removef - remove a file from software database
+
+SYNOPSIS
+
+   removef [ [-M] -R root_path] [-V fs_file] pkginst path...
+   removef [ [-M] -R root_path] [-V fs_file] -f pkginst
+
+DESCRIPTION
+
+   removef informs the system that the user, or software, intends to
+   remove
+   a pathname. Output from removef is the list of input pathnames that may
+   be safely removed (no other packages have a dependency on them).
+
+OPTIONS
+
+   The following options are supported:
+   -f
+   After all files have been processed, removef should be invoked with
+   the -f option to indicate that the removal phase is complete.
+   -M
+   Instruct removef not to use the $root_path/etc/vfstab file for
+   determining the client's mount points. This option assumes the mount
+   points are correct on the server and it behaves consistently with
+   Solaris 2.5 and earlier releases.
+   -R root_path
+   Define the full path name of a directory to use as the root_path. All
+   files, including package system information files, are relocated to a
+   directory tree starting in the specified root_path. The root_path may
+   be specified when installing to a client from a server (for example,
+   /export/root/client1).
+   removef inherits the value of the PKG_INSTALL_ROOT environment
+   variable. (See ENVIRONMENT VARIABLES, below.) If PKG_INSTALL_ROOT is
+   set, such as when the -R option is used with [1]pkgadd(1M) or
+   [2]pkgrm(1M),
+   there is no need to use the removef -R option.
+   Note -
+   The root file system of any non-global zones must not be referenced
+   with the -R option. Doing so might damage the global zone's file
+   system, might compromise the security of the global zone, and might
+   damage the non-global zone's file system. See [3]zones(5).
+   -V fs_file
+   Specify an alternative fs_file to map the client's file systems. For
+   example, used in situations where the $root_path/etc/vfstab file is
+   non-existent or unreliable.
+
+OPERANDS
+
+   The following operands are supported:
+   path
+   The pathname to be removed.
+   pkginst
+   The package instance from which the pathname is being removed.
+
+EXAMPLES
+
+Example 1: Using removef
+
+   The following example uses the removef command in an optional
+   pre-install
+   script:
+   echo "The following files are no longer part of this package
+   and are being removed."
+   removef $PKGINST /myapp/file1 /myapp/file2 |
+   while read pathname
+   do
+   echo "$pathname"
+   rm -f $pathname
+   done
+   removef -f $PKGINST || exit 2
+
+ENVIRONMENT VARIABLES
+
+   removef inherits the value of the following environment variable. This
+   variable is set when [4]pkgadd(1M) or [5]pkgrm(1M) is invoked with the
+   -R
+   option.
+   PKG_INSTALL_ROOT
+   If present, defines the full path name of a directory to use as the
+   system's PKG_INSTALL_ROOT path. All product and package information
+   files are then looked for in the directory tree, starting with the
+   specified PKG_INSTALL_ROOT path. If not present, the default system
+   path of / is used.
+
+EXIT STATUS
+
+   0
+   Successful completion.
+   >0
+   An error occurred.
+
+SEE ALSO
+
+   [6]pkginfo(1), [7]pkgmk(1), [8]pkgparam(1), [9]pkgproto(1),
+   [10]pkgtrans(1),
+   [11]installf(1M), [12]pkgadd(1M), [13]pkgask(1M), [14]pkgchk(1M),
+   [15]pkgrm(1M),
+   [16]attributes(5), [17]largefile(5)
+
+NOTES
+
+   Package commands are [18]largefile(5)-aware. They handle files larger
+   than 2
+   GB in the same way they handle smaller files. In their current
+   implementations, [19]pkgadd(1M), [20]pkgtrans(1) and other package
+   commands can
+   process a datastream of up to 4 GB.
+   October 30, 2007 [21]REMOVEF(1M)
+
+References
+
+   Visible links:
+   1. https://illumos.org/man/1M/pkgadd
+   2. https://illumos.org/man/1M/pkgrm
+   3. https://illumos.org/man/5/zones
+   4. https://illumos.org/man/1M/pkgadd
+   5. https://illumos.org/man/1M/pkgrm
+   6. https://illumos.org/man/1/pkginfo
+   7. https://illumos.org/man/1/pkgmk
+   8. https://illumos.org/man/1/pkgparam
+   9. https://illumos.org/man/1/pkgproto
+  10. https://illumos.org/man/1/pkgtrans
+  11. https://illumos.org/man/1M/installf
+  12. https://illumos.org/man/1M/pkgadd
+  13. https://illumos.org/man/1M/pkgask
+  14. https://illumos.org/man/1M/pkgchk
+  15. https://illumos.org/man/1M/pkgrm
+  16. https://illumos.org/man/5/attributes
+  17. https://illumos.org/man/5/largefile
+  18. https://illumos.org/man/5/largefile
+  19. https://illumos.org/man/1M/pkgadd
+  20. https://illumos.org/man/1/pkgtrans
+  21. https://illumos.org/man/1M/REMOVEF
+
+   Hidden links:
+  23. https://illumos.org/man/1M/pkgadd
+  24. https://illumos.org/man/1M/pkgrm
+  25. https://illumos.org/man/5/zones
+  26. https://illumos.org/man/1M/pkgadd
+  27. https://illumos.org/man/1M/pkgrm
+  28. https://illumos.org/man/1/pkginfo
+  29. https://illumos.org/man/1/pkgmk
+  30. https://illumos.org/man/1/pkgparam
+  31. https://illumos.org/man/1/pkgproto
+  32. https://illumos.org/man/1/pkgtrans
+  33. https://illumos.org/man/1M/installf
+  34. https://illumos.org/man/1M/pkgadd
+  35. https://illumos.org/man/1M/pkgask
+  36. https://illumos.org/man/1M/pkgchk
+  37. https://illumos.org/man/1M/pkgrm
+  38. https://illumos.org/man/5/attributes
+  39. https://illumos.org/man/5/largefile
+  40. https://illumos.org/man/5/largefile
+  41. https://illumos.org/man/1M/pkgadd
+  42. https://illumos.org/man/1/pkgtrans

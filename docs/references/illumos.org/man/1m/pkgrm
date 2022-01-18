@@ -1,0 +1,189 @@
+   PKGRM(1M) Maintenance Commands PKGRM(1M)
+
+NAME
+
+   pkgrm - remove a package from the system
+
+SYNOPSIS
+
+   pkgrm [-nv] [-a admin] [ [-A | -M] -R root_path]
+   [-V fs_file]
+   [pkginst... | -Y category[,category...]]
+   pkgrm -s spool
+   [pkginst... | -Y category[,category...]]
+
+DESCRIPTION
+
+   pkgrm will remove a previously installed or partially installed package
+   from the system. A check is made to determine if any other packages
+   depend on the one being removed. If a dependency exists, the action
+   taken
+   is defined in the admin file.
+   The default state for the command is in interactive mode, meaning that
+   prompt messages are given during processing to allow the administrator
+   to
+   confirm the actions being taken. Non-interactive mode can be requested
+   with the -n option.
+   The -s option can be used to specify the directory from which spooled
+   packages should be removed.
+   Certain unbundled and third-party packages are no longer entirely
+   compatible with the latest version of pkgrm. These packages require
+   user
+   interaction throughout the removal and not just at the very beginning.
+   To remove these older packages (released prior to Solaris 2.4), set the
+   following environment variable:NONABI_SCRIPTS=TRUE pkgrm permits
+   keyboard
+   interaction throughout the removal as long as this environment variable
+   is set.
+
+OPTIONS
+
+   The following options are supported:
+   -a admin
+   Use the installation administration file, admin, in place of the
+   default admin file. pkgrm first looks in the current working
+   directory for the administration file. If the specified
+   administration file is not in the current working directory, pkgrm
+   looks in the /var/sadm/install/admin directory for the administration
+   file.
+   -A
+   Remove the package files from the client's file system, absolutely.
+   If a file is shared with other packages, the default behavior is to
+   not remove the file from the client's file system.
+   -M
+   Instruct pkgrm not to use the $root_path/etc/vfstab file for
+   determining the client's mount points. This option assumes the mount
+   points are correct on the server and it behaves consistently with
+   Solaris 2.5 and earlier releases.
+   -n
+   Non-interactive mode. If there is a need for interaction, the command
+   will exit.
+   Use of this option requires that at least one package instance be
+   named upon invocation of the command. Certain conditions must exist
+   for a package to be removed non-interactively or a non-restrictive
+   admin file needs to be used.
+   -R root_path
+   Defines the full path name of a directory to use as the root_path.
+   All files, including package system information files, are relocated
+   to a directory tree starting in the specified root_path.
+   Note -
+   The root file system of any non-global zones must not be referenced
+   with the -R option. Doing so might damage the global zone's file
+   system, might compromise the security of the global zone, and might
+   damage the non-global zone's file system. See [1]zones(5).
+   -s spool
+   Remove the specified package(s) from the directory spool. The default
+   directory for spooled packages is /var/sadm/pkg.
+   -v
+   Trace all of the scripts that get executed by pkgrm, located in the
+   pkginst/install directory. This option is used for debugging the
+   procedural and non-procedural scripts.
+   -V fs_file
+   Specify an alternative fs_file to map the client's file systems. Used
+   in situations where the $root_path/etc/vfstab file is non-existent or
+   unreliable.
+   -Y category
+   Remove packages based on the value of the CATEGORY parameter stored
+   in the installed or spooled package's [2]pkginfo(4) file. No package
+   with the CATEGORY value of system can removed from the file system
+   with this option.
+
+OPERANDS
+
+   The following operand is supported:
+   pkginst
+   Specifies the package to be removed. The format pkginst.* can be used
+   to remove all instances of a package.
+   The asterisk character (*) is a special character to some shells and
+   may need to be escaped. In the C-Shell, "*" must be surrounded by
+   single quotes (') or preceded by a backslash (\).
+
+EXAMPLES
+
+Example 1: Removing All Instances of SUNWjunk from client1
+
+   The following example removes all instances of SUNWjunk from client1:
+   example% pkgrm -R /export/root/client1 SUNWjunk*
+   Note the caveat on the use of the -R option in the description of that
+   option, above.
+
+EXIT STATUS
+
+   The following exit values are returned:
+   0
+   Successful completion.
+   1
+   Fatal error.
+   2
+   Warning.
+   3
+   Interruption.
+   4
+   Administration.
+   10
+   Reboot after removal of all packages.
+   20
+   Reboot after removal of this package.
+
+SEE ALSO
+
+   [3]pkginfo(1), [4]pkgmk(1), [5]pkgparam(1), [6]pkgproto(1),
+   [7]pkgtrans(1),
+   [8]installf(1M), [9]pkgadd(1M), [10]pkgask(1M), [11]pkgchk(1M),
+   [12]removef(1M), [13]admin(4),
+   [14]pkginfo(4), [15]attributes(5), [16]largefile(5)
+
+NOTES
+
+   Package commands are [17]largefile(5)-aware. They handle files larger
+   than 2
+   GB in the same way they handle smaller files. In their current
+   implementations, [18]pkgadd(1M), [19]pkgtrans(1) and other package
+   commands can
+   process a datastream of up to 4 GB.
+   October 30, 2007 [20]PKGRM(1M)
+
+References
+
+   Visible links:
+   1. https://illumos.org/man/5/zones
+   2. https://illumos.org/man/4/pkginfo
+   3. https://illumos.org/man/1/pkginfo
+   4. https://illumos.org/man/1/pkgmk
+   5. https://illumos.org/man/1/pkgparam
+   6. https://illumos.org/man/1/pkgproto
+   7. https://illumos.org/man/1/pkgtrans
+   8. https://illumos.org/man/1M/installf
+   9. https://illumos.org/man/1M/pkgadd
+  10. https://illumos.org/man/1M/pkgask
+  11. https://illumos.org/man/1M/pkgchk
+  12. https://illumos.org/man/1M/removef
+  13. https://illumos.org/man/4/admin
+  14. https://illumos.org/man/4/pkginfo
+  15. https://illumos.org/man/5/attributes
+  16. https://illumos.org/man/5/largefile
+  17. https://illumos.org/man/5/largefile
+  18. https://illumos.org/man/1M/pkgadd
+  19. https://illumos.org/man/1/pkgtrans
+  20. https://illumos.org/man/1M/PKGRM
+
+   Hidden links:
+  22. https://illumos.org/man/5/zones
+  23. https://illumos.org/man/4/pkginfo
+  24. https://illumos.org/man/1/pkginfo
+  25. https://illumos.org/man/1/pkgmk
+  26. https://illumos.org/man/1/pkgparam
+  27. https://illumos.org/man/1/pkgproto
+  28. https://illumos.org/man/1/pkgtrans
+  29. https://illumos.org/man/1M/installf
+  30. https://illumos.org/man/1M/pkgadd
+  31. https://illumos.org/man/1M/pkgask
+  32. https://illumos.org/man/1M/pkgchk
+  33. https://illumos.org/man/1M/removef
+  34. https://illumos.org/man/4/admin
+  35. https://illumos.org/man/4/pkginfo
+  36. https://illumos.org/man/5/attributes
+  37. https://illumos.org/man/5/largefile
+  38. https://illumos.org/man/5/largefile
+  39. https://illumos.org/man/1M/pkgadd
+  40. https://illumos.org/man/1/pkgtrans

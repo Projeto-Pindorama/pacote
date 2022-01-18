@@ -1,0 +1,132 @@
+   PKGASK(1M) Maintenance Commands PKGASK(1M)
+
+NAME
+
+   pkgask - stores answers to a request script
+
+SYNOPSIS
+
+   pkgask [-d device] [-R root_path] -r response pkginst...
+
+DESCRIPTION
+
+   pkgask allows the administrator to store answers to an interactive
+   package (one with a request script, that is, a user-created file that
+   must be named request). Invoking this command generates a response file
+   that is then used as input at installation time. The use of this
+   response
+   file prevents any interaction from occurring during installation since
+   the file already contains all of the information the package needs.
+
+OPTIONS
+
+   The following options are supported
+   -d device
+   Run the request script for a package on device. device
+   can be a directory pathname or the identifiers for tape,
+   floppy disk or removable disk (for example, /var/tmp,
+   /dev/diskette, and /dev/dsk/c1d0s0). The default device
+   is the installation spool directory.
+   -R root_path
+   Define the full path name of a directory to use as the
+   root_path. All files, including package system
+   information files, are relocated to a directory tree
+   starting in the specified root_path.
+   Note -
+   The root file system of any non-global zones must not
+   be referenced with the -R option. Doing so might damage
+   the global zone's file system, might compromise the
+   security of the global zone, and might damage the non-
+   global zone's file system. See [1]zones(5).
+   -r response
+   Identify a file or directory which should be created to
+   contain the responses to interaction with the package.
+   The name must be a full pathname. The file, or directory
+   of files, can later be used as input to the [2]pkgadd(1M)
+   command.
+
+OPERANDS
+
+   The following operands are supported:
+   pkginst
+   Specify the package instance, or list of instances for which
+   request scripts will be created. The token all may be used to
+   refer to all packages available on the source medium.
+
+EXIT STATUS
+
+   0
+   Successful completion.
+   >0
+   An error occurred.
+
+SEE ALSO
+
+   [3]pkginfo(1), [4]pkgmk(1), [5]pkgparam(1), [6]pkgproto(1),
+   [7]pkgtrans(1),
+   [8]installf(1M), [9]pkgadd(1M), [10]pkgchk(1M), [11]pkgrm(1M),
+   [12]removef(1M), [13]admin(4),
+   [14]attributes(5)
+
+NOTES
+
+   The -r option can be used to indicate a directory name as well as a
+   filename. The directory name is used to create numerous response files,
+   each sharing the name of the package with which it should be
+   associated.
+   This would be used, for example, when you will be adding multiple
+   interactive packages with one invocation of [15]pkgadd(1M). Each
+   package
+   would need a response file. To create multiple response files with the
+   same name as the package instance, name the directory in which the
+   files
+   should be created and supply multiple instance names with the pkgask
+   command. When installing the packages, you will be able to identify
+   this
+   directory to the [16]pkgadd(1M) command.
+   If the default admin file is too restrictive, the administration file
+   may
+   need to be modified to allow for total non-interaction during a package
+   installation. See [17]admin(4) for details.
+   April 6, 2005 [18]PKGASK(1M)
+
+References
+
+   Visible links:
+   1. https://illumos.org/man/5/zones
+   2. https://illumos.org/man/1M/pkgadd
+   3. https://illumos.org/man/1/pkginfo
+   4. https://illumos.org/man/1/pkgmk
+   5. https://illumos.org/man/1/pkgparam
+   6. https://illumos.org/man/1/pkgproto
+   7. https://illumos.org/man/1/pkgtrans
+   8. https://illumos.org/man/1M/installf
+   9. https://illumos.org/man/1M/pkgadd
+  10. https://illumos.org/man/1M/pkgchk
+  11. https://illumos.org/man/1M/pkgrm
+  12. https://illumos.org/man/1M/removef
+  13. https://illumos.org/man/4/admin
+  14. https://illumos.org/man/5/attributes
+  15. https://illumos.org/man/1M/pkgadd
+  16. https://illumos.org/man/1M/pkgadd
+  17. https://illumos.org/man/4/admin
+  18. https://illumos.org/man/1M/PKGASK
+
+   Hidden links:
+  20. https://illumos.org/man/5/zones
+  21. https://illumos.org/man/1M/pkgadd
+  22. https://illumos.org/man/1/pkginfo
+  23. https://illumos.org/man/1/pkgmk
+  24. https://illumos.org/man/1/pkgparam
+  25. https://illumos.org/man/1/pkgproto
+  26. https://illumos.org/man/1/pkgtrans
+  27. https://illumos.org/man/1M/installf
+  28. https://illumos.org/man/1M/pkgadd
+  29. https://illumos.org/man/1M/pkgchk
+  30. https://illumos.org/man/1M/pkgrm
+  31. https://illumos.org/man/1M/removef
+  32. https://illumos.org/man/4/admin
+  33. https://illumos.org/man/5/attributes
+  34. https://illumos.org/man/1M/pkgadd
+  35. https://illumos.org/man/1M/pkgadd
+  36. https://illumos.org/man/4/admin

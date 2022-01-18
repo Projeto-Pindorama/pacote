@@ -1,0 +1,400 @@
+<HTML>
+<HEAD>
+<TITLE>Creating Solaris Packages</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<TABLE WIDTH="600" BORDER="0" CELLPADDING="5">
+<TR>
+<TD ALIGN="LEFT" BGCOLOR="#FFFFFF"><B>Document</B></TD>
+<TD ALIGN="RIGHT" BGCOLOR="#D0D0D0"><FONT SIZE="+2"><CENTER><B>Creating Solaris Packages</B></CENTER></FONT></TD>
+</TR>
+<TR>
+<TD ALIGN="LEFT" BGCOLOR="#FFFFFF"><B>Author</B></TD>
+<TD ALIGN="RIGHT" BGCOLOR="#D0D0D0"><CENTER>Mark &lt;mark&#64ibiblio.org&gt;</CENTER></TD>
+</TR>
+</TABLE>
+<BR>
+<H3>Introduction</H3>
+<P>
+Packages on Solaris allow easy installation and extraction of software. All
+the parts of a package are maintained in a table of contents. The package
+tools allow you to install, update and remove software easily without having
+to worry about "ghost files" left on the system or misconfigured or partly
+installed software.<BR>
+<BR>
+The process for creation of a package is generally to install the software
+once and then to organise it into a package that can be quickly added to
+another host or removed quickly from the first host. This greatly lessens the
+time needed to add software to a host.<BR>
+<BR>
+In this document we will use GNU bison 1.24 as the example software.<BR>
+<BR>
+For a full complement of precompiled Solaris packages, look at the Solaris
+Package Archive I maintain at
+<A HREF="http://sunsite.unc.edu/pub/packages/solaris/sparc">
+http://sunsite.unc.edu/pub/packages/solaris/sparc</A>
+<BR>
+<H3>Creation of the software</H3>
+To package any software you need to know the files that are to be included
+in the package. This is usually easy if you created the software. If however
+it's a completely new release which you have no experience with then you will
+most likely need to install it in some unique location to see exactly what is
+in the kit. With the GNU software this is easy to do as you can simply
+<FONT FACE="Courier New" SIZE="-1">`configure --prefix=/dir`</FONT> where
+<FONT FACE="Courier New" SIZE="-1">dir</FONT> is the temporary install
+directory. For this example I chose to use
+<FONT FACE="Courier New" SIZE="-1">/usr/local/pkg</FONT>.<BR>
+<BR>
+After compiling I did a <FONT FACE="Courier New" SIZE="-1">`make install`</FONT>
+and had GNUbison install itself into the
+<FONT FACE="Courier New" SIZE="-1">/usr/local/pkg</FONT> tree. Then I did a
+<FONT FACE="Courier New" SIZE="-1">`find /usr/local/pkg -print &gt; /tmp/files`.</FONT>
+Since I now knew what was in the software kit I could blow away the temporary
+<FONT FACE="Courier New" SIZE="-1">/usr/local/pkg</FONT> directory.<BR>
+<BR>
+Then it's simply a matter of compiling and installing the GNUbison package as normal.
+Since the file <FONT FACE="Courier New" SIZE="-1">/tmp/files</FONT> contains the
+names of the parts of GNUBison, nothing will get lost. We can begin to create our
+Solaris package now.
+
+<BR>
+<H3>Creating package configuration files</H3>
+Once the software is installed you need to create a table of contents suitable
+to be used for the package creation tool. First though you'll need to tidy up the
+<FONT FACE="Courier New" SIZE="-1">/tmp/files</FONT> to fix the pathnames of the
+files. (They still have <FONT FACE="Courier New" SIZE="-1">/usr/local/pkg</FONT> in
+front of them). Edit the file and fix the path names. Then run:<BR>
+<PRE>
+    % cat /tmp/files | pkgproto > /tmp/Prototype
+</PRE>
+This will create a <FONT FACE="Courier New" SIZE="-1">/tmp/Prototype</FONT>
+file with the following in it:<BR>
+<PRE>
+    d none /usr/local 0755 root root
+    d none /usr/local/bin 0755 root root
+    d none /usr/local/man 0755 root root
+    d none /usr/local/man/man1 0755 root root
+    d none /usr/local/lib 0755 root root
+    d none /usr/local/etc 0755 root root
+    d none /usr/local/info 0755 root root
+    d none /usr/local/share 0755 root root
+    f none /usr/local/bin/bison 0755 root root
+    f none /usr/local/man/man1/bison.1 0644 root root
+    f none /usr/local/info/bison.info 0644 root root
+    f none /usr/local/info/bison.info-1 0644 root root
+    f none /usr/local/info/bison.info-2 0644 root root
+    f none /usr/local/info/bison.info-3 0644 root root
+    f none /usr/local/info/bison.info-4 0644 root root
+    f none /usr/local/info/bison.info-5 0644 root root
+    f none /usr/local/share/bison.simple 0644 root root
+    f none /usr/local/share/bison.hairy 0644 root root
+</PRE>
+After manually reviewing the <FONT FACE="Courier New" SIZE="-1">/tmp/Prototype</FONT>
+file you may notice the permissions are not to your liking. Simply edit the file to specify
+what permissions you want on each inode. I manually alter each file in the package archive
+to have all files world readable, root owned, root group and all directories read and
+execute. (<FONT FACE="Courier New" SIZE="-1">drwx-r-xr-x</FONT> or
+<FONT FACE="Courier New" SIZE="-1">-rw-r--r--</FONT>).<BR>
+<BR>
+You now have to add a pointer to a <FONT FACE="Courier New" SIZE="-1">pkginfo</FONT> file
+which tells <FONT FACE="Courier New" SIZE="-1">pkgmk(1)</FONT> the necessary details of
+the package you are creating.<BR>
+<BR>
+So to the front of the <FONT FACE="Courier New" SIZE="-1">Prototype</FONT> file I add:<BR>
+<PRE>
+    i pkginfo
+</PRE>
+If you want <FONT FACE="Courier New" SIZE="-1">checkinstall</FONT>,
+<FONT FACE="Courier New" SIZE="-1">preinstall</FONT> and
+<FONT FACE="Courier New" SIZE="-1">postinstall</FONT> scripts run simply
+include them at the top.<BR>
+<BR>
+What are they I hear you say?<BR>
+<BR>
+<FONT FACE="Courier New" SIZE="-1">checkinstall</FONT>
+is a script that is run at install time, by the user "nobody". With it you
+can check for dependancies and problems and if needed, exit the
+<FONT FACE="Courier New" SIZE="-1">pkgadd</FONT> gracefully. Care is needed
+when building the package that the permissions on the directories are
+set up so the user "nobody" can get to the script.
+You are NOT asked by <FONT FACE="Courier New" SIZE="-1">pkgadd</FONT> if you want
+to run this script.<BR>
+<BR>
+<FONT FACE="Courier New" SIZE="-1">preinstall</FONT> is run as root when
+the package is actually installing. An abort here will require the user to
+<FONT FACE="Courier New" SIZE="-1">pkgrm</FONT> the half installed package.
+You are asked by <FONT FACE="Courier New" SIZE="-1">pkgadd</FONT> if you want
+to run this script.<BR>
+<BR>
+<FONT FACE="Courier New" SIZE="-1">postinstall</FONT> is a script that runs
+after the rest of the package is installed. With it you can do things like
+utilize the just installed software, install kernel drivers, create devices
+and other post-install things. This script also runs as root.
+You are asked by <FONT FACE="Courier New" SIZE="-1">pkgadd</FONT> if you want
+to run this script.<BR>
+<BR>
+To add them to the <FONT FACE="Courier New" SIZE="-1">Prototype</FONT> file
+put in a line like:<BR>
+<PRE>
+    i preinstall
+    i postinstall
+    i checkinstall
+</PRE>
+These scripts are run after installation starts, so if something goes wrong
+with the install in those scripts and they exit with non-zero then a
+<FONT FACE="Courier New" SIZE="-1">pkgrm</FONT>
+will be required to clean up the half installed package.<BR>
+<BR>
+Finally our <FONT FACE="Courier New" SIZE="-1">Prototype</FONT> file looks like:<BR>
+<PRE>
+    i pkginfo
+    i checkinstall
+    d none /usr/local/bin 0755 root root
+    d none /usr/local/man 0755 root root
+    d none /usr/local/man/man1 0755 root root
+    d none /usr/local/lib 0755 root root
+    d none /usr/local/etc 0755 root root
+    d none /usr/local/info 0755 root root
+    d none /usr/local/share 0755 root root
+    f none /usr/local/bin/bison 0755 root root
+    f none /usr/local/man/man1/bison.1 0644 root root
+    f none /usr/local/info/bison.info 0644 root root
+    f none /usr/local/info/bison.info-1 0644 root root
+    f none /usr/local/info/bison.info-2 0644 root root
+    f none /usr/local/info/bison.info-3 0644 root root
+    f none /usr/local/info/bison.info-4 0644 root root
+    f none /usr/local/info/bison.info-5 0644 root root
+    f none /usr/local/share/bison.simple 0644 root root
+    f none /usr/local/share/bison.hairy 0644 root root
+</PRE>
+See the <FONT FACE="Courier New" SIZE="-1">prototype(4)</FONT> manual
+page for further information on this file.<BR>
+<BR>
+Originally I used to be verbose and add in lines such as:<BR>
+<PRE>
+    d none /usr 0755 root root
+    d none /usr/local 0755 root root
+</PRE>
+which told the system the modes of the parent directories on my system. But
+there is a problem with this since it assumes that the file system is always
+laid out the same way. If <FONT FACE="Courier New" SIZE="-1">/usr/local</FONT>
+was a symlink to <FONT FACE="Courier New" SIZE="-1">/opt</FONT> on your system
+for instance, having the above lines would break things. It's a gotcha you
+will need to watch out for. It isn't a bad thing to leave out the lines, the
+packager will complain, but you can ignore it. When the package is installed
+the system will automatically create <FONT FACE="Courier New" SIZE="-1">/usr/local</FONT>
+if it doesn't exist. A general rule is, don't assume your standard is the
+universal standard.<BR>
+<BR>
+Next we need to create a <FONT FACE="Courier New" SIZE="-1">pkginfo</FONT>
+file to tell <FONT FACE="Courier New" SIZE="-1">pkgmk(1)</FONT> what you actually
+want things to be called. Here is the file I used:<BR>
+<PRE>
+    PKG="GNUbison"
+    NAME="GNU bison 1.24"
+    VERSION="1.24"
+    ARCH="sparc"
+    CLASSES="none"
+    CATEGORY="utility"
+    VENDOR="GNU"
+    PSTAMP="4thSep95"
+    EMAIL="request@gnu.ai.mit.edu"
+    ISTATES="S s 1 2 3"
+    RSTATES="S s 1 2 3"
+    BASEDIR="/"
+</PRE>
+See the <FONT FACE="Courier New" SIZE="-1">pkginfo(4)</FONT> manual
+page for information on these fields.<BR>
+
+<H3>Creating the package</H3>
+Once the package configuration files are complete you can now run the package
+creation command from the directory containing the config files
+(<FONT FACE="Courier New" SIZE="-1">/tmp</FONT>).<BR>
+<PRE>
+    % pkgmk -o -r / -d /tmp -f Prototype
+</PRE>
+This command means make the package, overwrite any previous attempts, use
+'<FONT FACE="Courier New" SIZE="-1">/</FONT>' as the root directory for locating
+the files, build the package in the <FONT FACE="Courier New" SIZE="-1">/tmp</FONT>
+directory and finally, take the list of files and attributes from the
+<FONT FACE="Courier New" SIZE="-1">Prototype</FONT> file.<BR>
+<BR>
+The output produced was:<BR>
+<PRE>
+    ## Processing pkginfo file.
+    ## Attempting to volumize 19 entries in pkgmap.
+    part  1 -- 990 blocks, 21 entries
+    ## Packaging one part.
+    /tmp/GNUbison/pkgmap
+    /tmp/GNUbison/pkginfo
+    /tmp/GNUbison/root/usr/local/bin/bison
+    /tmp/GNUbison/root/usr/local/info/bison.info
+    /tmp/GNUbison/root/usr/local/info/bison.info-1
+    /tmp/GNUbison/root/usr/local/info/bison.info-2
+    /tmp/GNUbison/root/usr/local/info/bison.info-3
+    /tmp/GNUbison/root/usr/local/info/bison.info-4
+    /tmp/GNUbison/root/usr/local/info/bison.info-5
+    /tmp/GNUbison/root/usr/local/man/man1/bison.1
+    /tmp/GNUbison/root/usr/local/share/bison.hairy
+    /tmp/GNUbison/root/usr/local/share/bison.simple
+    ## Packaging complete.
+</PRE>
+This created a directory in <FONT FACE="Courier New" SIZE="-1">/tmp</FONT>
+called <FONT FACE="Courier New" SIZE="-1">GNUbison</FONT>. Inside that directory were
+two files called <FONT FACE="Courier New" SIZE="-1">pkgmap</FONT> and
+<FONT FACE="Courier New" SIZE="-1">pkginfo</FONT>. The first,
+<FONT FACE="Courier New" SIZE="-1">pkgmap</FONT>, contains the pathnames
+to all the files and permissions and checksums for each of them. The second
+file, <FONT FACE="Courier New" SIZE="-1">pkginfo</FONT>, contains the same
+information you specified in your <FONT FACE="Courier New" SIZE="-1">pkginfo</FONT>
+file in <FONT FACE="Courier New" SIZE="-1">/tmp</FONT>. Also in the
+<FONT FACE="Courier New" SIZE="-1">/tmp/GNUbison</FONT> directory is a directory
+called <FONT FACE="Courier New" SIZE="-1">root</FONT> that has the tree of all
+your files laid out as they would appear on the real filesystem. If you included
+a <FONT FACE="Courier New" SIZE="-1">checkinstall</FONT> script, (or similar), they
+would be stored in a directory called <FONT FACE="Courier New" SIZE="-1">install</FONT>.
+You don't need to really be aware of what's under the top directory unless you need
+to fix something manually.<BR>
+<BR>
+To allow easy storage and transportation of this package all you need to do is
+created a <FONT FACE="Courier New" SIZE="-1">tar.gz</FONT> file of the
+<FONT FACE="Courier New" SIZE="-1">GNUbison</FONT> directory and transport the
+package like that.<BR>
+<PRE>
+    cd /tmp
+    tar -cf - GNUbison | gzip -9 -c > GNUbison.1.24.SPARC.pkg.tar.gz
+</PRE>
+In most cases I include the release of Solaris that the software was compiled on
+in the name of the package.<BR>
+<H3>Unpacking and installing a package</H3>
+To unpackage and install a prepared package simply type in:<BR>
+<PRE>
+    % gunzip -c GNUbison.1.24.SPARC.pkg.tar.gz | tar -xvf -
+    % su -
+    # pkgadd -d $PWD
+</PRE>
+You will be prompted to add in the GNUbison package; confirm this, answer
+appropriately to commence the install and it will self install. Afterwards
+you can remove the GNUbison directory to clean up.<BR>
+<BR>
+<H3>Package Creation Files</H3>
+When the package is created it's a good idea to keep the config files as you
+may choose to re-create the package or even update it to a later version.
+Having the files from other packages simplifies this. On my package creation
+machines I keep these files in <FONT FACE="Courier New">/pkgs</FONT>.<BR>
+
+<PRE>
+missi:/pkgs root# ls -aCF
+./                  g77.0.5.21/         gzip.1.24/          perl5.004.04/
+../                 gcc.2.7.2/          libstdc++-2.8.1.1/  preinstall*
+X11R6.3/            gcc.2.7.2.1/        lsof.4.02/          rcs.5.7/
+bison-1.25/         gcc.2.7.2.2/        mkpkg*              tcsh.6.07.02/
+cmu-snmp.2.1.2/     gcc.2.7.2.3/        netpbm.1mar.94/     
+cvs.1.9/            gcc.2.8.1/          perl5.003/
+flex.2.5.4a/        gdb/                perl5.004.03/
+
+missi:/pkgs/gzip.1.24 root# ls -aCF
+./           ../          Prototype      checkinstall*    mkpkg*       pkginfo
+
+<U><B>pkginfo</B></U>
+<BR>
+PKG="GNUbison"
+NAME="GNU bison 1.24 SPARC Solaris 2.6"
+VERSION="1.24"
+ARCH="sparc"
+CLASSES="none"
+CATEGORY="utility"
+VENDOR="GNU"
+PSTAMP="12thAugust2004"
+EMAIL="request@gnu.ai.mit.edu"
+ISTATES="S s 1 2 3"
+RSTATES="S s 1 2 3"
+BASEDIR="/"
+<BR>
+<U><B>Prototype</B></U>
+<BR>
+i pkginfo
+i checkinstall
+d none /usr/local/bin 0755 root root
+d none /usr/local/man 0755 root root
+d none /usr/local/man/man1 0755 root root
+d none /usr/local/lib 0755 root root
+d none /usr/local/etc 0755 root root
+d none /usr/local/info 0755 root root
+d none /usr/local/share 0755 root root
+f none /usr/local/bin/bison 0755 root root
+f none /usr/local/man/man1/bison.1 0644 root root
+f none /usr/local/info/bison.info 0644 root root
+f none /usr/local/info/bison.info-1 0644 root root
+f none /usr/local/info/bison.info-2 0644 root root
+f none /usr/local/info/bison.info-3 0644 root root
+f none /usr/local/info/bison.info-4 0644 root root
+f none /usr/local/info/bison.info-5 0644 root root
+f none /usr/local/share/bison.simple 0644 root root
+f none /usr/local/share/bison.hairy 0644 root root
+<BR>
+<U><B>mkpkg</B></U>
+<BR>
+#!/bin/sh
+pkg=GNUbison
+pkgfile=GNUbison.1.24.SPARC.Solaris.2.6.pkg.tgz
+pkgmk -o -r / -d /tmp -f Prototype
+echo "Setting file permissions in /tmp/${pkg} tree to 644."
+find /tmp/${pkg} -type f -print | xargs chmod a+r
+find /tmp/${pkg} -type f -print | xargs chmod u+w
+echo "Setting directory permissions in /tmp/${pkg} tree to 755."
+find /tmp/${pkg} -type d -print | xargs chmod 755
+if [ -f /tmp/${pkg}/install/preinstall ]; then
+    chmod 755 /tmp/${pkg}/install/preinstall
+fi
+if [ -f /tmp/${pkg}/install/postinstall ]; then
+    chmod 755 /tmp/${pkg}/install/postinstall
+fi
+if [ -f /tmp/${pkg}/install/preremove ]; then
+    chmod 755 /tmp/${pkg}/install/preremove
+fi
+if [ -f /tmp/${pkg}/install/postremove ]; then
+    chmod 755 /tmp/${pkg}/install/postremove
+fi
+if [ -f /tmp/${pkg}/install/request ]; then
+    chmod 755 /tmp/${pkg}/install/request
+fi
+if [ -f /tmp/${pkg}/install/checkinstall ]; then
+    chmod 755 /tmp/${pkg}/install/checkinstall
+fi
+cd /tmp
+echo Gzipping /tmp/$pkg into /tmp/$pkgfile...
+/usr/bin/tar -cf - $pkg | gzip -9c > /tmp/$pkgfile
+<BR>
+<U><B>checkinstall</B></U>
+<BR>
+#!/bin/sh
+#
+# expected_release="5.6"
+expected_platform="sparc"
+#
+release=`uname -r`
+platform=`uname -p`
+#
+if [ ${platform} != ${expected_platform} ]; then
+    echo "\n\n\n\tThis package must be installed on a ${expected_platform} architecture\n"
+    echo "\tAborting installation.\n\n\n"
+    exit 1
+fi
+# if [ ${release} != ${expected_release} ]; then
+#     echo "\n\n\n\tThis package must be installed on a ${expected_release} machine\n"
+#     echo "\tAborting installation.\n\n\n"
+#     exit 1
+# fi
+
+exit 0
+
+</PRE>
+The <FONT FACE="Courier New" SIZE="-1">mkpkg</FONT> script is mainly so I don't have to 
+re-type the commands to build the package file. It's customized for every package. The
+<FONT FACE="Courier New" SIZE="-1">checkinstall</FONT> script above has been altered to be
+less stringent about the destination machine requirements. Most software doesn't require
+that the machine's Solaris revision be of a specific level. I leave the SPARC architechture
+check in though.
+</BODY>
+</HTML>

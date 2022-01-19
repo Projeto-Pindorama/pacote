@@ -7,7 +7,7 @@ Go itself and the SVR4 package manager specification.
 
 ## You can read more about it in READMEs below:  
 * :brazil: [README.pt.markdown (original)](./docs/README.pt.markdown);
-* :us: [README.en.markdown (TO DO)](./docs/README.en.markdown);
+* :us: [README.en.markdown](./docs/README.en.markdown);
 * :jp: [README.jp.markdown (TO DO)](./docs/README.jp.markdown);
 * :taiwan: [README.zh_TW.markdown (TO DO)](./docs/README.zh_TW.markdown).
 

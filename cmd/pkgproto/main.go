@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"bufio"
 	"os"
-	"path/filepath"
 	"log"
 )
 
@@ -22,23 +21,20 @@ func main() {
 }
 
 func scan(path string) {
-	/* Get absolute path for the file. */
-	filepath,_ := filepath.Abs(path)
-	
 	/* Does it even exists? */
-	_, err := os.Stat(filepath)
+	_, err := os.Stat(path)
 	if os.IsNotExist(err) {
 		/* First, format the error message, then pass it to panic() */
 		/* I've really needing to create an error-handling library */
-		errmsg := fmt.Sprintf(err_stat, filepath)
+		errmsg := fmt.Sprintf(err_stat, path)
 		log.Fatal(errmsg)
 	}
 
-/*	fi, err := os.Lstat(filepath)
+/*	fi, err := os.Lstat(path)
 	octal_permissions := fi.Mode().Perm()
 	switch type := fi.Mode(); {
 		case type.IsRegular():
 
 */	
-	fmt.Println(filepath)
+	fmt.Println(path)
 }

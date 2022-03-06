@@ -26,8 +26,7 @@ func scan(path string) {
 	if os.IsNotExist(err) {
 		/* First, format the error message, then pass it to panic() */
 		/* I've really needing to create an error-handling library */
-		errMsg := fmt.Sprintf(errStat, path)
-		log.Fatal(errMsg)
+		log.Fatalf(errStat, path)
 	}
 
 	fi, err := os.Lstat(path)
@@ -38,8 +37,7 @@ func scan(path string) {
 		case filetupe.IsDir():
 			type = "d"
 		case filetype&fs.ModeSymlink !=0:
-			errMsg = fmt.Sprintf(errSLink, path)
-			log.Fatal(errMsg)
+			log.Fatalf(errSLink, path)
 	}
 	fmt.Printf('%c %s', type, path)
 }

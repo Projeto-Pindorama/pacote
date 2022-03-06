@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	err_stat = "unable to stat <%s>"
-	err_slink = "symbolic links are not supported <%s>"
+	errStat = "unable to stat <%s>"
+	errSLink = "symbolic links are not supported <%s>"
 )
 
 func main() {
@@ -26,22 +26,20 @@ func scan(path string) {
 	if os.IsNotExist(err) {
 		/* First, format the error message, then pass it to panic() */
 		/* I've really needing to create an error-handling library */
-		errmsg := fmt.Sprintf(err_stat, path)
-		log.Fatal(errmsg)
+		errMsg := fmt.Sprintf(errStat, path)
+		log.Fatal(errMsg)
 	}
 
 	fi, err := os.Lstat(path)
-	octal_permissions := fi.Mode().Perm()
+	octalPermissions := fi.Mode().Perm()
 	switch filetype := fi.Mode(); {
 		case filetype.IsRegular():
-			type := f
+			type = "f"
 		case filetupe.IsDir():
-			type := d
-		case filetype&fs.ModeNamedPipe != 0:
-			type := p
+			type = "d"
 		case filetype&fs.ModeSymlink !=0:
-			errmsg := fmt.Sprintf(err_slink, path)
-			log.Fatal(errmsg)
+			errMsg = fmt.Sprintf(errSLink, path)
+			log.Fatal(errMsg)
 	}
 	fmt.Printf('%c %s', type, path)
 }

@@ -9,7 +9,7 @@ Futhermore, I want to do something from scratch and decently, as well as I want 
 "SVR4" stands for "System V, Revision 4", which was an UNIX version released in 1987, arising from the conjuct work of AT&T and Sun Microsystems.  
 Even if it's considered "the trigger of insanity" of UNIX, at least one positive thing it brought, that in case was the improvements of BSDs pkgtools<sup>(lacks exact sources)</sup>, giving rise to what is now known as "SVR4 pkgtools".   
 
-I'm basing myself in several documents (which can be found at [docs/references/](./docs/references)), but from all of them, the one being used the most is the "Application Packaging Developer's Guide" from Sun Microsystems, published February 2000 ([805-6338.pdf](https://www.uvm.edu/~fcs/Doc/Solaris8/805-6338.pdf)); second is the Illumos manpages ([illumos.org/man/](https://illumos.org/man)).  
+I'm basing myself in several documents (which can be found at [docs/references/](./references)), but from all of them, the one being used the most is the "Application Packaging Developer's Guide" from Sun Microsystems, published February 2000 ([805-6338.pdf](https://www.uvm.edu/~fcs/Doc/Solaris8/805-6338.pdf)); second is the Illumos manpages ([illumos.org/man/](https://illumos.org/man)).  
 
 ## Goals (in a list)
 * Faithfulness to SVR4 origin pkgtools, also at usability level;

@@ -21,12 +21,9 @@ func main() {
 }
 
 func scan(path string) {
-	/* Does it even exists? */
-	fi, err := os.Lstat(path) // Lstat already does the work
+	fi, err := os.Lstat(path) // Lstat already does the work of checking if exists
 	if os.IsNotExist(err) {
-		/* First, format the error message, then pass it to panic() */
-		/* I've really needing to create an error-handling library */
-		log.Fatalf(errStat, path)
+		log.Fatalf(errStat, path) // log.Fatalf already already formats error messages
 	}
 
 	// octalPermissions := filemode.Perm()
@@ -46,6 +43,12 @@ func determineFType(fi os.FileInfo) rune {
 		return 'd'
 	case mode&fs.ModeSymlink != 0:
 		return 's'
+	case mode&fs.ModeDevice != 0:
+		return 'b'
+	case mode&fs.ModeCharDevice != 0:
+		return 'c'
+	case mode&fs.ModeNamedPipe != 0:
+		return 'p'
 	default:
 		return '?'
 	}

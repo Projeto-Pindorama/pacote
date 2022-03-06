@@ -9,7 +9,7 @@ import (
 
 const (
 	err_stat = "unable to stat <%s>"
-	err_link = "symbolic links are not supported <%s>"
+	err_slink = "symbolic links are not supported <%s>"
 )
 
 func main() {
@@ -30,11 +30,18 @@ func scan(path string) {
 		log.Fatal(errmsg)
 	}
 
-/*	fi, err := os.Lstat(path)
+	fi, err := os.Lstat(path)
 	octal_permissions := fi.Mode().Perm()
-	switch type := fi.Mode(); {
-		case type.IsRegular():
-
-*/	
-	fmt.Println(path)
+	switch filetype := fi.Mode(); {
+		case filetype.IsRegular():
+			type := f
+		case filetupe.IsDir():
+			type := d
+		case filetype&fs.ModeNamedPipe != 0:
+			type := p
+		case filetype&fs.ModeSymlink !=0:
+			errmsg := fmt.Sprintf(err_slink, path)
+			log.Fatal(errmsg)
+	}
+	fmt.Printf('%c %s', type, path)
 }

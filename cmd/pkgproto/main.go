@@ -1,14 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"bufio"
-	"os"
+	"fmt"
+	"io/fs"
 	"log"
+	"os"
 )
 
 const (
-	errStat = "unable to stat <%s>"
+	errStat  = "unable to stat <%s>"
 	errSLink = "symbolic links are not supported <%s>"
 )
 
@@ -17,29 +18,38 @@ func main() {
 	for readstdin.Scan() {
 		scan(readstdin.Text())
 	}
-
 }
 
 func scan(path string) {
-	/* Does it even exists? */
-	_, err := os.Stat(path)
+	fi, err := os.Lstat(path) // Lstat already does the work of checking if exists
 	if os.IsNotExist(err) {
-		/* First, format the error message, then pass it to panic() */
-		/* I've really needing to create an error-handling library */
-		errMsg := fmt.Sprintf(errStat, path)
-		log.Fatal(errMsg)
+		log.Fatalf(errStat, path) // log.Fatalf already already formats error messages
 	}
 
-	fi, err := os.Lstat(path)
-	octalPermissions := fi.Mode().Perm()
-	switch filetype := fi.Mode(); {
-		case filetype.IsRegular():
-			type = "f"
-		case filetupe.IsDir():
-			type = "d"
-		case filetype&fs.ModeSymlink !=0:
-			errMsg = fmt.Sprintf(errSLink, path)
-			log.Fatal(errMsg)
+	// octalPermissions := filemode.Perm()
+	ftype := determineFType(fi)
+	if ftype == 's' {
+		log.Fatalf(errSLink, path)
 	}
-	fmt.Printf('%c %s', type, path)
+
+	fmt.Printf("%c %s", ftype, path)
+}
+
+func determineFType(fi os.FileInfo) rune {
+	switch mode := fi.Mode(); {
+	case mode.IsRegular():
+		return 'f'
+	case mode.IsDir():
+		return 'd'
+	case mode&fs.ModeSymlink != 0:
+		return 's'
+	case mode&fs.ModeDevice != 0:
+		return 'b'
+	case mode&fs.ModeCharDevice != 0:
+		return 'c'
+	case mode&fs.ModeNamedPipe != 0:
+		return 'p'
+	default:
+		return '?'
+	}
 }

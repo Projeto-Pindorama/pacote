@@ -11,6 +11,7 @@ import (
 const (
 	errStat  = "unable to stat <%s>"
 	errSLink = "symbolic links are not supported <%s>"
+	exitStat = 0
 )
 
 func main() {
@@ -24,6 +25,7 @@ func scan(path string) {
 	fi, err := os.Lstat(path) // Lstat already does the work of checking if exists
 	if os.IsNotExist(err) {
 		log.Fatalf(errStat, path) // log.Fatalf already already formats error messages
+		os.Exit(exitStat++)
 	}
 
 	// octalPermissions := filemode.Perm()
@@ -32,7 +34,7 @@ func scan(path string) {
 		log.Fatalf(errSLink, path)
 	}
 
-	fmt.Printf("%c %s", ftype, path)
+	fmt.Printf("%c %s\n", ftype, path)
 }
 
 func determineFType(fi os.FileInfo) rune {

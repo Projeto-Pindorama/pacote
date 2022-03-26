@@ -6,6 +6,9 @@ import (
 	"io/fs"
 	"log"
 	"os"
+	"os/user"
+	"strconv"
+	"syscall"
 )
 
 const (
@@ -25,16 +28,37 @@ func scan(path string) {
 	fi, err := os.Lstat(path) // Lstat already does the work of checking if exists
 	if os.IsNotExist(err) {
 		log.Fatalf(errStat, path) // log.Fatalf already already formats error messages
-		os.Exit(exitStat++)
+		os.Exit(exitStat + 1)
 	}
 
-	// octalPermissions := filemode.Perm()
 	ftype := determineFType(fi)
+	fstat := fi.Sys().(*syscall.Stat_t)
+
+	/* I do not have an idea of how we will be getting these for now...
+	* majorNumber, minorNumber :=
+	 */
+
+	/* Later on this shall be moved to a library (libperms maybe?), since we
+	* probably will be manipulating permissions in the future. */
+
+	/* octalPermissions := */
+
+	/* This is pathetic. We're converting our UID (and GID too) to uint64,
+	* then converting it to a string using FormatUint; why Go doesn't do
+	* this in a more on-the-fly way? */
+	getOwner, _ := user.LookupId(strconv.FormatUint(uint64(fstat.Uid), 10))
+	getGroup, _ := user.LookupGroupId(strconv.FormatUint(uint64(fstat.Gid), 10))
+	ownerPermissions := getOwner.Username
+	groupPermissions := getGroup.Name
+
+	/* If it's a symbolic link, print a error saying that these aren't
+	*  supported. I'm almost changing of idea in this subject, may we
+	*  couldn't support links, but at least we could use the real file, eh? */
 	if ftype == 's' {
 		log.Fatalf(errSLink, path)
 	}
 
-	fmt.Printf("%c %s\n", ftype, path)
+	fmt.Printf("%c %s %s %s %s %s %s\n", ftype, path, "major", "minor", "octalPermissions", ownerPermissions, groupPermissions)
 }
 
 func determineFType(fi os.FileInfo) rune {

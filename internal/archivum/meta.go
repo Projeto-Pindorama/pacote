@@ -1,41 +1,39 @@
-/* 
-* meta.go - Get UNIX metadata for files and return in a struct 
+/*
+* meta.go - Get UNIX metadata for files and return in a struct
 *
-*/
+ */
 
-package archivum 
+package archivum
 
 import (
-	"bufio"
-	"fmt"
 	"io/fs"
-	"internal/pfmt"
-	"log"
 	"os"
 	"os/user"
 	"strconv"
 	"syscall"
+
+	"github.com/Projeto-Pindorama/motoko/internal/pfmt"
 )
 
 type Metadata struct {
-	ftype rune
-	path string
-	major string /* I think these three will be int in the end */
-	minor string
+	ftype    rune
+	path     string
+	major    string /* I think these three will be int in the end */
+	minor    string
 	octalmod string
-	owner string
-	group string
+	owner    string
+	group    string
 }
 
 const (
-	errStat = "unable to stat <%s>"
+	errStat  = "unable to stat <%s>"
 	errSLink = "symbolic links are not supported <%s>"
 )
 
 func Scan(path string) Metadata {
 	fi, err := os.Lstat(path)
 	if os.IsNotExist(err) {
-		pfmt.pfmt(stderr, MM_ERROR, errStat, path)
+		pfmt.Pfmt(os.Stderr, "MM_ERROR", errStat)
 	}
 
 	ftype := determineFType(fi)
@@ -56,17 +54,17 @@ func Scan(path string) Metadata {
 	*  supported. I'm almost changing of idea in this subject, may we
 	*  couldn't support links, but at least we could use the real file, eh? */
 	if ftype == 's' {
-		pfmt.pfmt(stderr, MM_ERROR, errSLink, path)
+		pfmt.Pfmt(os.Stderr, "MM_ERROR", errSLink)
 	}
 
-	Data := Metadata {
-		ftype: ftype,
-		path: path,
-		major: "major",
-		minor: "minor",
+	Data := Metadata{
+		ftype:    ftype,
+		path:     path,
+		major:    "major",
+		minor:    "minor",
 		octalmod: "octalPermissions",
-		owner: ownerPermissions,
-		group: groupPermissions,
+		owner:    ownerPermissions,
+		group:    groupPermissions,
 	}
 	return Data
 }

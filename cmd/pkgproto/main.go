@@ -2,14 +2,9 @@ package main
 
 import (
 	"bufio"
-	"fmt"
-	"io/fs"
-	"internal/archivum"
-	"log"
 	"os"
-	"os/user"
-	"strconv"
-	"syscall"
+
+	"github.com/Projeto-Pindorama/motoko/internal/archivum"
 )
 
 func main() {
@@ -20,6 +15,6 @@ func main() {
 		* archivum.Scan() returns now. I need to do this fast as
 		* possible.
 		* fmt.Printf("%c %s %s %s %s %s %s\n", )
-		*/
+		 */
 	}
 }

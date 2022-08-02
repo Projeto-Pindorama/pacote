@@ -45,4 +45,6 @@ func reportType(report string) string {
 	case "MM_STD":
 	case "MM_NOSTD":
 	}
+
+	return "UNKNOWN"
 }

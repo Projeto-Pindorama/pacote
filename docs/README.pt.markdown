@@ -2,7 +2,7 @@
 
 ## O que é?
 A Motoko é um conjunto de ferramentas que permitem que você instale, remova, crie e distribua pacotes no seu sistema.  
-O meu objetivo é oferecer um gerenciador de pacotes que siga, __de fato__, o modelo de gerenciamento de pacotes SRV4, mas que ao mesmo tempo não seja resultado de *turd polishing* de código com mais de 20 anos -- no caso, o código das pkgtools originais da Sun que fora liberado junto com o OpenSolaris nas quebradas de 2005.  
+O meu objetivo é oferecer um gerenciador de pacotes que siga, __de fato__, o modelo de gerenciamento de pacotes SRV4, mas que ao mesmo tempo não seja resultado de "enxugamento de gelo" de código com mais de 20 anos -- no caso, o código das pkgtools originais da Sun que fora liberado junto com o OpenSolaris nas quebradas de 2005.  
 Além disso, eu quero fazer algo decente do zero assim como quero aprender Go de verdade -- no caso, desde manipulação de texto-puro até manipular arquivos e permissões no file system.  
 
 ### SVR4? Espera, o que é isso?
@@ -14,9 +14,9 @@ Estou me baseando em diversos documentos (que podem ser encontrados em [docs/ref
 ## Objetivos (em uma listinha)
 * fidelidade às pkgtools SVR4 originais, inclusive a nível de usabilidade;
 * ao mesmo tempo que haja fidelidade, não deve-se haver cumplicidade com erros:  ou seja, se algo existir nas pkgtools originais mas que possa ser substituído sem perdas significativas por algo melhor e mais simples, será;
-* cortar dependência o máximo possível com o Shell e com ferramentas no `$PATH`;
-* manter a base de código legível e fácil de fazer hacks/manutenção;  
-* `mk` (plan9port) como build system.  
+* cortar dependência o máximo possível com o Shell e com ferramentas no ``$PATH``;
+* manter a base de código legível e fácil de fazer *hacks*/manutenção;  
+* `mk` (plan9port) como sistema de montagem.  
 
 ## Não-objetivos (também em uma listinha)
 * resolução de dependências;
@@ -24,7 +24,7 @@ Estou me baseando em diversos documentos (que podem ser encontrados em [docs/ref
 * compressão nativa;
 * suporte para outras línguas além do inglês em mensagens na tela (isso pode mudar);  
 Essas coisas devem ficar a cargo de uma abstração, não da Motoko.  
-* [*links* simbólicos](http://doc.cat-v.org/plan_9/4th_edition/papers/lexnames). 
+* [ligações simbólicas](http://doc.cat-v.org/plan_9/4th_edition/papers/lexnames). 
 
 ## Por que não as pkgtools do Slackware ou...?
 As pkgtools do Slackware, mesmo sendo incrivelmente boas para algo feito em uma linguagem para meros hacks e estando numa licença extremamente liberal, ainda pecam em vários sentidos ao meu ver.  
@@ -44,7 +44,7 @@ No exato momento em que estou escrevendo esse README, ainda ninguém -- afinal, 
 Estou criando-o para o Copacabana Linux, mas meu objetivo é que qualquer um possa usar.  
 Talvez até mesmo o pessoal do Musl LFS, que ainda está preso às pkgtools do Slackware levemente modificadas, acabe utilizando -- e eu ficaria extremamente feliz se o fizessem. :smiley:  
 
-## O que houve com o `otto-pkg`?
+## O que houve com o ``otto-pkg``?
 Talvez quem me acompanhe há mais tempo, no caso desde final de 2019 e início de 2020, se pergunte sobre o Otto/otto-pkg.  
 Eu sinceramente desisti de fazê-lo no estado atual, está simplesmente impraticável -- e se você ficou aguando o meu chope com "brincadeiras" e está lendo isso, eu lhe dou os parabéns por ter conseguido o que queria; agora você pode tentar arrumar um emprego decente e sair da casa da sua mamãe.  
 Ao longo dos meses em que tentei fazê-lo, em Shell, eu cometi vários erros.  

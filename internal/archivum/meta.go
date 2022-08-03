@@ -18,7 +18,7 @@ import (
 type Metadata struct {
 	FType    rune
 	Path     string
-	Major    string /* I think these three will be int in the end */
+	Major    string
 	Minor    string
 	OctalMod string
 	Owner    string
@@ -38,7 +38,14 @@ func Scan(path string) Metadata {
 
 	ftype := determineFType(fi)
 	fstat := fi.Sys().(*syscall.Stat_t)
-	/* majorNumber, minorNumber := */
+
+	/* Something that is valid to note: minor/major numbers are only used in
+	* device files */
+	var majorNumber, minorNumber string
+	if (ftype == 'c') || (ftype == 'b') {
+		majorNumber, minorNumber = "nil", "nil"
+	}
+
 	/* octalPermissions := */
 
 	/* This is pathetic. We're converting our UID (and GID too) to uint64,
@@ -60,8 +67,8 @@ func Scan(path string) Metadata {
 	Data := Metadata{
 		FType:    ftype,
 		Path:     path,
-		Major:    "major",
-		Minor:    "minor",
+		Major:    majorNumber,
+		Minor:    minorNumber,
 		OctalMod: "octalPermissions",
 		Owner:    ownerPermissions,
 		Group:    groupPermissions,

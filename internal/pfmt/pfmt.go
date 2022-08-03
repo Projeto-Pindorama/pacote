@@ -13,7 +13,16 @@ import (
 	"io"
 )
 
-func Pfmt(stream io.Writer, report string, message string) {
+func Pfmt(stream io.Writer, report string, message ...string) {
+	// Create a proper slice, of type interface{}, slice it until the 0th
+	// element and get its size as the length of the "message" variable.
+//	smessage := make([]interface{}, 0, len(message))
+	// Now, run through "message" and append its contents to the "smessage"
+	// slice.
+//	for i := range message {
+//		smessage = append(smessage, i)
+//	}
+	// A clever programming trick, but done!
 	fmt.Fprintf(stream, "%s: %s", reportType(report), message)
 }
 

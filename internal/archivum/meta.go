@@ -16,24 +16,24 @@ import (
 )
 
 type Metadata struct {
-	ftype    rune
-	path     string
-	major    string /* I think these three will be int in the end */
-	minor    string
-	octalmod string
-	owner    string
-	group    string
+	FType    rune
+	Path     string
+	Major    string /* I think these three will be int in the end */
+	Minor    string
+	OctalMod string
+	Owner    string
+	Group    string
 }
 
 const (
-	errStat  = "unable to stat <%s>"
-	errSLink = "symbolic links are not supported <%s>"
+	errStat  = "unable to stat <%s>\n"
+	errSLink = "symbolic links are not supported <%s>\n"
 )
 
 func Scan(path string) Metadata {
 	fi, err := os.Lstat(path)
 	if os.IsNotExist(err) {
-		pfmt.Pfmt(os.Stderr, "MM_ERROR", errStat)
+		pfmt.Pfmt(os.Stderr, "MM_ERROR", errStat, path)
 	}
 
 	ftype := determineFType(fi)
@@ -54,17 +54,18 @@ func Scan(path string) Metadata {
 	*  supported. I'm almost changing of idea in this subject, may we
 	*  couldn't support links, but at least we could use the real file, eh? */
 	if ftype == 's' {
-		pfmt.Pfmt(os.Stderr, "MM_ERROR", errSLink)
+		pfmt.Pfmt(os.Stderr, "MM_ERROR", errSLink, path)
+		continue
 	}
 
 	Data := Metadata{
-		ftype:    ftype,
-		path:     path,
-		major:    "major",
-		minor:    "minor",
-		octalmod: "octalPermissions",
-		owner:    ownerPermissions,
-		group:    groupPermissions,
+		FType:    ftype,
+		Path:     path,
+		Major:    "major",
+		Minor:    "minor",
+		OctalMod: "octalPermissions",
+		Owner:    ownerPermissions,
+		Group:    groupPermissions,
 	}
 	return Data
 }

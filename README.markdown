@@ -12,46 +12,83 @@ This project currently implements the following tools:
 | Command         | Description
 | Status |
 |-----------------|-------------------------------------------------------------------------|--------|
-| ``pkgproto``(1) | Generate a ``prototype``(4) file for input to the
-``pkgmk``(1) command. | W.I.P. |  
+| ``pkgproto``(1) | Generate a ``prototype``(4) file for input to the ``pkgmk``(1) command. | W.I.P. |  
 
 
 The following tools shall be implemented in coming days, weeks, months or, in
 the worst case scenario, years.  
 
-| Command         | Description
-| Status   |
-|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
-| ``pkgmk``(1)    | Create an software package.
-| Planning |
-| ``pkgadd``(8)   | Install a software package.
-| Planning |
-| ``pkgrm``(8)    | Remove a software package.
-| Planning |
-| ``pkgask``(8)   | Store answers to a request script.
-| Planning |
-| ``pkgtrans``(1) | "Translate" packages between datastream
-formats.<br>According to the specification, it is used for<br>copying packages
-into a distribution medium.
-| Planning |
-| ``pkgchk``(8)   | Check if a package is impartial.
-| Planning |
-| ``pkginfo``(1)  | Displays information about a software package.<br>This shall
-be simple, since it is only based on<br>parsing the ``pkginfo``(5) file from a
-package.                                                                     |
-Planning |
-| ``pkgparam``(1) | Displays package parameters, declared at
-``pkginfo``(5).<br>In fact, it's basically like ``pkginfo``(1), but it
-displays<br>the file instead of parsing it for displaying separate
-values.<br>This shall also be simple. | Planning |
-| ``installf``(8) | Installs files into an already installed software
-package.<br>In theory, this basically just edits the database and copies<br>the
-file to the file system.
-| Planning |
-| ``removef``(8)  | Removes files from an already installed software
-package.<br>In theory, this also just edits the database and deletes<br>the file
-in the file system.
-| Planning |
+<table>
+<thead>
+  <tr>
+    <th>Command</th>
+    <th>Description</th>
+    <th>Status</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>``pkgmk``(1)</td>
+    <td>Create an software package.</td>
+    <td>Planning</td>
+  </tr>
+  <tr>
+    <td>``pkgadd``(8)</td>
+    <td>Install a software package.</td>
+    <td>Planning</td>
+  </tr>
+  <tr>
+    <td>``pkgrm``(8)</td>
+    <td>Remove a software package.</td>
+    <td>Planning</td>
+  </tr>
+  <tr>
+    <td>``pkgask``(8)</td>
+    <td>Store answers to a request script.</td>
+    <td>Planning</td>
+  </tr>
+  <tr>
+    <td>``pkgtrans``(1)</td>
+    <td>"Translate" packages between datastream formats.<br>According to the
+specification, it is used for<br>copying packages into a distribution
+medium.</td>
+    <td>Planning</td>
+  </tr>
+  <tr>
+    <td>``pkgchk``(8)</td>
+    <td>Check if a package is impartial.</td>
+    <td>Planning</td>
+  </tr>
+  <tr>
+    <td>``pkginfo``(1)</td>
+    <td>Displays information about a software package.<br>This shall be simple,
+since it is only based on<br>parsing the ``pkginfo``(5) file from a
+package.</td>
+    <td>Planning</td>
+  </tr>
+  <tr>
+    <td>``pkgparam``(1)</td>
+    <td>Displays package parameters, declared at ``pkginfo``(5).<br>In fact,
+it's basically like ``pkginfo``(1), but it displays<br>the file instead of
+parsing it for displaying separate values.<br>This shall also be simple.</td>
+    <td>Planning</td>
+  </tr>
+  <tr>
+    <td>``installf``(8)</td>
+    <td>Installs files into an already installed software package.<br>In theory,
+this basically just edits the database and copies<br>the file to the file
+system.</td>
+    <td>Planning</td>
+  </tr>
+  <tr>
+    <td>``removef``(8)</td>
+    <td>Removes files from an already installed software package.<br>In theory,
+this also just edits the database and deletes<br>the file in the file
+system.</td>
+    <td>Planning</td>
+  </tr>
+</tbody>
+</table>
 
 ## You can read more about it in READMEs below:  
 * :brazil: [README.pt.markdown (original)](./docs/README.pt.markdown);

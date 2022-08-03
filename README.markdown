@@ -9,11 +9,23 @@ Go itself and the SVR4 package manager specification.
 
 This project currently implements the following tools:  
 
-| Command         | Description
-| Status |
-|-----------------|-------------------------------------------------------------------------|--------|
-| ``pkgproto``(1) | Generate a ``prototype``(4) file for input to the ``pkgmk``(1) command. | W.I.P. |  
-
+<table>
+<thead>
+  <tr>
+    <th>Command</th>
+    <th>Description</th>
+    <th>Status</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><tt>pkgproto</tt>(1)</td>
+    <td>Generate a <tt>prototype</tt>(4) file for input to the
+<tt>pkgmk</tt>;(1) command.</td>
+    <td>W.I.P.; Almost finished</td>
+  </tr>
+</tbody>
+</table>
 
 The following tools shall be implemented in coming days, weeks, months or, in
 the worst case scenario, years.  
@@ -28,60 +40,60 @@ the worst case scenario, years.
 </thead>
 <tbody>
   <tr>
-    <td>``pkgmk``(1)</td>
+    <td><tt>pkgmk</tt>(1)</td>
     <td>Create an software package.</td>
     <td>Planning</td>
   </tr>
   <tr>
-    <td>``pkgadd``(8)</td>
+    <td><tt>pkgadd</tt>(8)</td>
     <td>Install a software package.</td>
     <td>Planning</td>
   </tr>
   <tr>
-    <td>``pkgrm``(8)</td>
+    <td><tt>pkgrm</tt>(8)</td>
     <td>Remove a software package.</td>
     <td>Planning</td>
   </tr>
   <tr>
-    <td>``pkgask``(8)</td>
+    <td><tt>pkgask</tt>(8)</td>
     <td>Store answers to a request script.</td>
     <td>Planning</td>
   </tr>
   <tr>
-    <td>``pkgtrans``(1)</td>
+    <td><tt>pkgtrans</tt>(1)</td>
     <td>"Translate" packages between datastream formats.<br>According to the
 specification, it is used for<br>copying packages into a distribution
 medium.</td>
     <td>Planning</td>
   </tr>
   <tr>
-    <td>``pkgchk``(8)</td>
+    <td><tt>pkgchk</tt>(8)</td>
     <td>Check if a package is impartial.</td>
     <td>Planning</td>
   </tr>
   <tr>
-    <td>``pkginfo``(1)</td>
+    <td><tt>pkginfo</tt>(1)</td>
     <td>Displays information about a software package.<br>This shall be simple,
-since it is only based on<br>parsing the ``pkginfo``(5) file from a
+since it is only based on<br>parsing the <tt>pkginfo</tt>(5) file from a
 package.</td>
     <td>Planning</td>
   </tr>
   <tr>
-    <td>``pkgparam``(1)</td>
-    <td>Displays package parameters, declared at ``pkginfo``(5).<br>In fact,
-it's basically like ``pkginfo``(1), but it displays<br>the file instead of
+    <td><tt>pkgparam</tt>(1)</td>
+    <td>Displays package parameters, declared at <tt>pkginfo</tt>(5).<br>In fact,
+it's basically like <tt>pkginfo</tt>(1), but it displays<br>the file instead of
 parsing it for displaying separate values.<br>This shall also be simple.</td>
     <td>Planning</td>
   </tr>
   <tr>
-    <td>``installf``(8)</td>
+    <td><tt>installf</tt>(8)</td>
     <td>Installs files into an already installed software package.<br>In theory,
 this basically just edits the database and copies<br>the file to the file
 system.</td>
     <td>Planning</td>
   </tr>
   <tr>
-    <td>``removef``(8)</td>
+    <td><tt>removef</tt>(8)</td>
     <td>Removes files from an already installed software package.<br>In theory,
 this also just edits the database and deletes<br>the file in the file
 system.</td>

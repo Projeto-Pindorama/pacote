@@ -55,7 +55,6 @@ func Scan(path string) Metadata {
 	*  couldn't support links, but at least we could use the real file, eh? */
 	if ftype == 's' {
 		pfmt.Pfmt(os.Stderr, "MM_ERROR", errSLink, path)
-		continue
 	}
 
 	Data := Metadata{

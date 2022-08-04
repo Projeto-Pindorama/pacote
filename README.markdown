@@ -21,7 +21,7 @@ This project currently implements the following tools:
   <tr>
     <td><tt>pkgproto</tt>(1)</td>
     <td>Generate a <tt>prototype</tt>(4) file for input to the
-<tt>pkgmk</tt>;(1) command.</td>
+<tt>pkgmk</tt>(1) command.</td>
     <td>W.I.P.; Almost finished</td>
   </tr>
 </tbody>

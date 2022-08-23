@@ -30,7 +30,7 @@ const (
 	errSLink = "symbolic links are not supported <%s>\n"
 )
 
-func Scan(path string) Metadata {
+func Scan(path string) (*Metadata, error) {
 	fi, err := os.Lstat(path)
 	if os.IsNotExist(err) {
 		pfmt.Pfmt(os.Stderr, "MM_ERROR", errStat, path)

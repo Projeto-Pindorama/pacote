@@ -40,8 +40,7 @@ func Scan(path string) (*Metadata, error) {
 	ftype := determineFType(fi)
 	fstat := fi.Sys().(*syscall.Stat_t)
 
-	/* Something that is valid to note: minor/major numbers are only used in
-	* device files */
+	// minor/major numbers are only used in device files */
 	var majorNumber, minorNumber string
 	if (ftype == 'c') || (ftype == 'b') {
 		majorNumber, minorNumber = "nil", "nil"
@@ -49,18 +48,11 @@ func Scan(path string) (*Metadata, error) {
 
 	/* octalPermissions := */
 
-	/* This is pathetic. We're converting our UID (and GID too) to uint64,
-	* then converting it to a string using FormatUint; why Go doesn't do
-	* this in a more on-the-fly way? Well, I think this library exists for a
-	* reason then. */
 	getOwner, _ := user.LookupId(strconv.FormatUint(uint64(fstat.Uid), 10))
 	getGroup, _ := user.LookupGroupId(strconv.FormatUint(uint64(fstat.Gid), 10))
 	ownerPermissions := getOwner.Username
 	groupPermissions := getGroup.Name
 
-	/* If it's a symbolic link, print a error saying that these aren't
-	*  supported. I'm almost changing of idea in this subject, may we
-	*  couldn't support links, but at least we could use the real file, eh? */
 	if ftype == 's' {
 		return nil, fmt.Errorf("%w <%s>", errSLink, path)
 	}

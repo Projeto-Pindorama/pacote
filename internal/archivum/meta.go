@@ -6,6 +6,8 @@
 package archivum
 
 import (
+	"errors"
+	"fmt"
 	"io/fs"
 	"os"
 	"os/user"
@@ -25,15 +27,14 @@ type Metadata struct {
 	Group    string
 }
 
-const (
-	errStat  = "unable to stat <%s>\n"
-	errSLink = "symbolic links are not supported <%s>\n"
+var (
+	errSLink = errors.New("symbolic links are unsupported")
 )
 
 func Scan(path string) (*Metadata, error) {
 	fi, err := os.Lstat(path)
-	if os.IsNotExist(err) {
-		pfmt.Pfmt(os.Stderr, "MM_ERROR", errStat, path)
+	if err != nil {
+		return nil, err
 	}
 
 	ftype := determineFType(fi)
@@ -61,10 +62,10 @@ func Scan(path string) (*Metadata, error) {
 	*  supported. I'm almost changing of idea in this subject, may we
 	*  couldn't support links, but at least we could use the real file, eh? */
 	if ftype == 's' {
-		pfmt.Pfmt(os.Stderr, "MM_ERROR", errSLink, path)
+		return nil, fmt.Errorf("%w <%s>", errSLink, path)
 	}
 
-	Data := Metadata{
+	Data := &Metadata{
 		FType:    ftype,
 		Path:     path,
 		Major:    majorNumber,
@@ -73,7 +74,8 @@ func Scan(path string) (*Metadata, error) {
 		Owner:    ownerPermissions,
 		Group:    groupPermissions,
 	}
-	return Data
+
+	return Data, nil
 }
 
 func determineFType(fi os.FileInfo) rune {

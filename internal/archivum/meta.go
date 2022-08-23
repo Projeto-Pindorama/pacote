@@ -13,8 +13,6 @@ import (
 	"os/user"
 	"strconv"
 	"syscall"
-
-	"github.com/Projeto-Pindorama/motoko/internal/pfmt"
 )
 
 type Metadata struct {

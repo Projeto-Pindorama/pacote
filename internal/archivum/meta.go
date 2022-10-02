@@ -10,59 +10,46 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
-	"os/user"
-	"strconv"
-	"syscall"
 )
 
 type Metadata struct {
-	FType    rune
-	Path     string
-	Major    string
-	Minor    string
-	OctalMod string
-	Owner    string
-	Group    string
+	FType      rune
+	Path       string
+	OctalMod   string
+	Owner      string
+	Group      string
+	DeviceInfo *DeviceInfo
 }
 
 var (
 	errSLink = errors.New("symbolic links are unsupported")
 )
 
-func Scan(path string) (*Metadata, error) {
-	fi, err := os.Lstat(path)
+func Scan(dir OperatingSystemFS, path string) (*Metadata, error) {
+	fi, err := dir.Stat(path)
 	if err != nil {
 		return nil, err
 	}
 
 	ftype := determineFType(fi)
-	fstat := fi.Sys().(*syscall.Stat_t)
 
 	// minor/major numbers are only used in device files */
-	var majorNumber, minorNumber string
+	var deviceInfo *DeviceInfo = nil
 	if (ftype == 'c') || (ftype == 'b') {
-		majorNumber, minorNumber = "nil", "nil"
+		deviceInfo = fi.DeviceInfo()
 	}
-
-	/* octalPermissions := */
-
-	getOwner, _ := user.LookupId(strconv.FormatUint(uint64(fstat.Uid), 10))
-	getGroup, _ := user.LookupGroupId(strconv.FormatUint(uint64(fstat.Gid), 10))
-	ownerPermissions := getOwner.Username
-	groupPermissions := getGroup.Name
 
 	if ftype == 's' {
 		return nil, fmt.Errorf("%w <%s>", errSLink, path)
 	}
 
 	Data := &Metadata{
-		FType:    ftype,
-		Path:     path,
-		Major:    majorNumber,
-		Minor:    minorNumber,
-		OctalMod: "octalPermissions",
-		Owner:    ownerPermissions,
-		Group:    groupPermissions,
+		FType:      ftype,
+		Path:       path,
+		OctalMod:   "octalPermissions",
+		Owner:      fi.Owner().Name,
+		Group:      fi.Group().Name,
+		DeviceInfo: deviceInfo,
 	}
 
 	return Data, nil

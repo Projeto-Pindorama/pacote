@@ -6,74 +6,78 @@
 package archivum
 
 import (
+	"errors"
+	"fmt"
 	"io/fs"
 	"os"
-	"os/user"
-	"strconv"
-	"syscall"
-
-	"github.com/Projeto-Pindorama/motoko/internal/pfmt"
 )
 
 type Metadata struct {
-	FType    rune
-	Path     string
-	Major    string
-	Minor    string
-	OctalMod string
-	Owner    string
-	Group    string
+	FType      rune
+	Path       string
+	OctalMod   string
+	Owner      string
+	Group      string
+	DeviceInfo *DeviceInfo
 }
 
-const (
-	errStat  = "unable to stat <%s>\n"
-	errSLink = "symbolic links are not supported <%s>\n"
+var (
+	errSLink = errors.New("symbolic links are unsupported")
 )
 
-func Scan(path string) Metadata {
-	fi, err := os.Lstat(path)
-	if os.IsNotExist(err) {
-		pfmt.Pfmt(os.Stderr, "MM_ERROR", errStat, path)
+func Scan(dir OperatingSystemFS, path string) (*Metadata, error) {
+	fi, err := dir.Stat(path)
+	if err != nil {
+		return nil, err
 	}
 
 	ftype := determineFType(fi)
-	fstat := fi.Sys().(*syscall.Stat_t)
 
-	/* Something that is valid to note: minor/major numbers are only used in
-	* device files */
-	var majorNumber, minorNumber string
+	// minor/major numbers are only used in device files */
+	var deviceInfo *DeviceInfo = nil
 	if (ftype == 'c') || (ftype == 'b') {
-		majorNumber, minorNumber = "nil", "nil"
+		deviceInfo = fi.DeviceInfo()
 	}
 
-	/* octalPermissions := */
-
-	/* This is pathetic. We're converting our UID (and GID too) to uint64,
-	* then converting it to a string using FormatUint; why Go doesn't do
-	* this in a more on-the-fly way? Well, I think this library exists for a
-	* reason then. */
-	getOwner, _ := user.LookupId(strconv.FormatUint(uint64(fstat.Uid), 10))
-	getGroup, _ := user.LookupGroupId(strconv.FormatUint(uint64(fstat.Gid), 10))
-	ownerPermissions := getOwner.Username
-	groupPermissions := getGroup.Name
-
-	/* If it's a symbolic link, print a error saying that these aren't
-	*  supported. I'm almost changing of idea in this subject, may we
-	*  couldn't support links, but at least we could use the real file, eh? */
 	if ftype == 's' {
-		pfmt.Pfmt(os.Stderr, "MM_ERROR", errSLink, path)
+		return nil, fmt.Errorf("%w <%s>", errSLink, path)
 	}
 
-	Data := Metadata{
-		FType:    ftype,
-		Path:     path,
-		Major:    majorNumber,
-		Minor:    minorNumber,
-		OctalMod: "octalPermissions",
-		Owner:    ownerPermissions,
-		Group:    groupPermissions,
+	Data := &Metadata{
+		FType:      ftype,
+		Path:       path,
+		OctalMod:   "octalPermissions",
+		Owner:      fi.Owner().Name,
+		Group:      fi.Group().Name,
+		DeviceInfo: deviceInfo,
 	}
-	return Data
+
+	return Data, nil
+}
+
+func MetadataToString(m *Metadata) string {
+	if m.DeviceInfo == nil {
+		return fmt.Sprintf(
+			"%c %s %s %s %s\n",
+			m.FType,
+			m.Path,
+			m.OctalMod,
+			m.Owner,
+			m.Group,
+		)
+	} else {
+		return fmt.Sprintf(
+			"%c %s %d %d %s %s %s\n",
+			m.FType,
+			m.Path,
+			m.DeviceInfo.Major,
+			m.DeviceInfo.Minor,
+			m.OctalMod,
+			m.Owner,
+			m.Group,
+		)
+	}
+
 }
 
 func determineFType(fi os.FileInfo) rune {

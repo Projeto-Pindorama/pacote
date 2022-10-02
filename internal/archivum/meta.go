@@ -58,7 +58,7 @@ func Scan(dir OperatingSystemFS, path string) (*Metadata, error) {
 func MetadataToString(m *Metadata) string {
 	if m.DeviceInfo == nil {
 		return fmt.Sprintf(
-			"%c %s %s %s %s\n",
+			"%c %s %s %s %s",
 			m.FType,
 			m.Path,
 			m.OctalMod,
@@ -67,7 +67,7 @@ func MetadataToString(m *Metadata) string {
 		)
 	} else {
 		return fmt.Sprintf(
-			"%c %s %d %d %s %s %s\n",
+			"%c %s %d %d %s %s %s",
 			m.FType,
 			m.Path,
 			m.DeviceInfo.Major,

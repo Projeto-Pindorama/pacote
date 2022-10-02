@@ -55,6 +55,31 @@ func Scan(dir OperatingSystemFS, path string) (*Metadata, error) {
 	return Data, nil
 }
 
+func MetadataToString(m *Metadata) string {
+	if m.DeviceInfo == nil {
+		return fmt.Sprintf(
+			"%c %s %s %s %s\n",
+			m.FType,
+			m.Path,
+			m.OctalMod,
+			m.Owner,
+			m.Group,
+		)
+	} else {
+		return fmt.Sprintf(
+			"%c %s %d %d %s %s %s\n",
+			m.FType,
+			m.Path,
+			m.DeviceInfo.Major,
+			m.DeviceInfo.Minor,
+			m.OctalMod,
+			m.Owner,
+			m.Group,
+		)
+	}
+
+}
+
 func determineFType(fi os.FileInfo) rune {
 	switch mode := fi.Mode(); {
 	case mode.IsRegular():

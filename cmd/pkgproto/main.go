@@ -18,11 +18,6 @@ func main() {
 			log.Fatal(err)
 		}
 
-		fmt.Printf("%c %s %s %s %s\n",
-			metadata.FType,
-			metadata.Path,
-			metadata.OctalMod,
-			metadata.Owner,
-			metadata.Group)
+		fmt.Println(archivum.MetadataToString(metadata))
 	}
 }

@@ -1,0 +1,8 @@
+# Exclude Vim trash
+.*.un~
+*~
+.*~
+
+# We don't want binaries in the repository, right eh?
+bin
+pkg

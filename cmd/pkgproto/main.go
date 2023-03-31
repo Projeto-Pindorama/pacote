@@ -10,9 +10,10 @@ import (
 	"github.com/Projeto-Pindorama/motoko/internal/archivum"
 )
 
+var class *string
 
 func main() {
-	class := *flag.String("c", "none", "Class")
+	class = flag.String("c", "none", "Class")
 	flag.Parse()
 	fs := archivum.NewUnixFS("/")
 	readstdin := bufio.NewScanner(os.Stdin)
@@ -22,34 +23,34 @@ func main() {
 			log.Fatal(err)
 		}
 
-		fmt.Println(MetadataToString(metadata, class))
+		fmt.Println(MetadataToString(metadata))
 	}
 }
 
-func MetadataToString(m *archivum.Metadata, class string) string {
-	if m.DeviceInfo == nil {
+func MetadataToString(m *archivum.Metadata) string {
+	if m.FType == 's' {
+		return fmt.Sprintf(
+			"%c %s %s=%s",
+			m.FType,
+			*class,
+			m.Path,
+			m.RealPath,
+		)
+	} else if m.DeviceInfo == nil {
 		return fmt.Sprintf(
 			"%c %s %s %s %s %s",
 			m.FType,
-			class,
+			*class,
 			m.Path,
 			m.OctalMod,
 			m.Owner,
 			m.Group,
 		)
-	} else if m.FType == 's' {
-		return fmt.Sprintf(
-			"%c %s %s=%s",
-			m.FType,
-			class,
-			m.Path,
-			m.RealPath,
-		)
 	} else {
 		return fmt.Sprintf(
 			"%c %s %s %d %d %s %s %s",
 			m.FType,
-			class,
+			*class,
 			m.Path,
 			m.DeviceInfo.Major,
 			m.DeviceInfo.Minor,

@@ -43,12 +43,6 @@ func Scan(dir OperatingSystemFS, path string) (*Metadata, error) {
 
 	if ftype == 's' {
 		realPath, _ = filepath.Abs(path)
-		Data := &Metadata{
-			FType:      ftype,
-			Path:       path,
-			RealPath:   realPath,
-		}
-		return Data, nil
 	}
 
 	Data := &Metadata{

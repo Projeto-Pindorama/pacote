@@ -7,15 +7,16 @@ package archivum
 
 import (
 	"errors"
-	"fmt"
 	"io/fs"
 	"os"
+	"path/filepath"
 )
 
 type Metadata struct {
 	FType      rune
 	Path       string
-	OctalMod   string
+	RealPath   string
+	OctalMod   string 
 	Owner      string
 	Group      string
 	DeviceInfo *DeviceInfo
@@ -33,51 +34,34 @@ func Scan(dir OperatingSystemFS, path string) (*Metadata, error) {
 
 	ftype := determineFType(fi)
 
-	// minor/major numbers are only used in device files */
+	// minor/major numbers are only used in device files
 	var deviceInfo *DeviceInfo = nil
+	var realPath  string = ""
 	if (ftype == 'c') || (ftype == 'b') {
 		deviceInfo = fi.DeviceInfo()
 	}
 
 	if ftype == 's' {
-		return nil, fmt.Errorf("%w <%s>", errSLink, path)
+		realPath, _ = filepath.Abs(path)
+		Data := &Metadata{
+			FType:      ftype,
+			Path:       path,
+			RealPath:   realPath,
+		}
+		return Data, nil
 	}
 
 	Data := &Metadata{
 		FType:      ftype,
 		Path:       path,
-		OctalMod:   "octalPermissions",
+		RealPath:   realPath,
+		OctalMod:   "permissions",
 		Owner:      fi.Owner().Name,
 		Group:      fi.Group().Name,
 		DeviceInfo: deviceInfo,
 	}
 
 	return Data, nil
-}
-
-func MetadataToString(m *Metadata) string {
-	if m.DeviceInfo == nil {
-		return fmt.Sprintf(
-			"%c %s %s %s %s",
-			m.FType,
-			m.Path,
-			m.OctalMod,
-			m.Owner,
-			m.Group,
-		)
-	} else {
-		return fmt.Sprintf(
-			"%c %s %d %d %s %s %s",
-			m.FType,
-			m.Path,
-			m.DeviceInfo.Major,
-			m.DeviceInfo.Minor,
-			m.OctalMod,
-			m.Owner,
-			m.Group,
-		)
-	}
-
 }
 
 func determineFType(fi os.FileInfo) rune {

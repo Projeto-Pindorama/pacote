@@ -16,7 +16,7 @@ type Metadata struct {
 	FType      rune
 	Path       string
 	RealPath   string
-	OctalMod   string 
+	OctalMod   string
 	Owner      string
 	Group      string
 	DeviceInfo *DeviceInfo
@@ -36,7 +36,7 @@ func Scan(dir OperatingSystemFS, path string) (*Metadata, error) {
 
 	// minor/major numbers are only used in device files
 	var deviceInfo *DeviceInfo = nil
-	var realPath  string = ""
+	var realPath string = ""
 	if (ftype == 'c') || (ftype == 'b') {
 		deviceInfo = fi.DeviceInfo()
 	}
@@ -50,7 +50,7 @@ func Scan(dir OperatingSystemFS, path string) (*Metadata, error) {
 		Path:       path,
 		RealPath:   realPath,
 		OctalMod:   "permissions",
-		Owner:      fi.Owner().Name,
+		Owner:      fi.Owner().Username,
 		Group:      fi.Group().Name,
 		DeviceInfo: deviceInfo,
 	}

@@ -49,7 +49,7 @@ func Scan(dir OperatingSystemFS, path string) (*Metadata, error) {
 		FType:      ftype,
 		Path:       path,
 		RealPath:   realPath,
-		OctalMod:   "permissions",
+		OctalMod:   permsOctal(fi.Mode().Perm()),
 		Owner:      fi.Owner().Username,
 		Group:      fi.Group().Name,
 		DeviceInfo: deviceInfo,

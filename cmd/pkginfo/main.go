@@ -3,7 +3,13 @@ package main
 import (
 	"fmt"
 	"os"
+
+	"github.com/jessevdk/go-flags"
 )
+
+type DefaultOpts struct {
+	Long bool `short:"l" long:"long" description:"#long listing"`
+}
 
 type PackageInfo struct {
 	Vendor   string
@@ -18,20 +24,48 @@ type PackageInfo struct {
 }
 
 func main() {
-	pkg, err := ReadInfo(os.Args[1])
+	var opts DefaultOpts
+
+	parser := flags.NewParser(&opts, flags.Default)
+
+	parser.Usage = "\n" +
+		"pkginfo [-q] [-pi] [-x|l] [options] [pkg ...]\n" +
+		"pkginfo -d device [-q] [-x|l] [options] [pkg ...]\n" +
+		"where\n" +
+		"  -q #quiet mode\n" +
+		"  -p #select partially installed packages\n" +
+		"  -i #select completely installed packages\n" +
+		"  -x #extracted listing\n" +
+		"  -l #long listing\n" +
+		"  -r #relocation base\n" +
+		"and options may include:\n" +
+		"  -c category, [category...]\n" +
+		"  -a architecture\n" +
+		"  -v version\n"
+
+	args, err := parser.ParseArgs(os.Args)
+
+	if err != nil {
+		return
+	}
+
+	pkg, err := ReadInfo(args[1])
 
 	if err != nil {
 		fmt.Println("An error: " + err.Error())
 		return
 	}
 
-	fmt.Printf("Vendor: %s\n", pkg.Vendor)
-	fmt.Printf("PkgInst: %s\n", pkg.PkgInst)
-	fmt.Printf("Hotline: %s\n", pkg.Hotline)
-	fmt.Printf("Pkg: %s\n", pkg.Pkg)
-	fmt.Printf("Arch: %s\n", pkg.Arch)
-	fmt.Printf("Desc: %s\n", pkg.Desc)
-	fmt.Printf("Category: %s\n", pkg.Category)
-	fmt.Printf("Name: %s\n", pkg.Name)
-	fmt.Printf("Version: %s\n", pkg.Version)
+	if opts.Long {
+		fmt.Printf("   PkgInst:\t%s\n", pkg.PkgInst)
+		fmt.Printf("      Name:\t%s\n", pkg.Name)
+		fmt.Printf("  Category:\t%s\n", pkg.Category)
+		fmt.Printf("      Arch:\t%s\n", pkg.Arch)
+		fmt.Printf("   Version:\t%s\n", pkg.Version)
+		fmt.Printf("    Vendor:\t%s\n", pkg.Vendor)
+		fmt.Printf("      Desc:\t%s\n", pkg.Desc)
+		fmt.Printf("   Hotline:\t%s\n", pkg.Hotline)
+	} else {
+		fmt.Printf("%s\t%s\t\t%s\n", pkg.Category, pkg.Pkg, pkg.Desc)
+	}
 }

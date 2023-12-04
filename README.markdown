@@ -95,7 +95,7 @@ medium.</td>
     <td>Displays information about a software package.<br>This shall be simple,
 since it is only based on<br>parsing the <tt>pkginfo</tt>(5) file from a
 package.</td>
-    <td>Planning</td>
+    <td>W.I.P.</td>
   </tr>
   <tr>
     <td><tt>pkgparam</tt>(1)</td>

@@ -43,29 +43,40 @@ func main() {
 		"  -a architecture\n" +
 		"  -v version\n"
 
-	args, err := parser.ParseArgs(os.Args)
+  parser.ParseArgs(os.Args)
 
-	if err != nil {
-		return
-	}
+  entries, err := os.ReadDir(os.Getenv("pkgdir"))
+  
+  if err != nil {
+    fmt.Println("An error: " + err.Error())
+    return
+  }
+ 
+  pkgSlc := []*PackageInfo{}
+  
+  for _, e := range entries {
+	  pkg, err := ReadInfo(os.Getenv("pkgdir") + "/" + e.Name())
 
-	pkg, err := ReadInfo(args[1])
+	  if err != nil {
+		  fmt.Println("An error: " + err.Error())
+      return
+	  }
 
-	if err != nil {
-		fmt.Println("An error: " + err.Error())
-		return
-	}
+    pkgSlc = append(pkgSlc, pkg)
+  }
 
-	if opts.Long {
-		fmt.Printf("   PkgInst:\t%s\n", pkg.PkgInst)
-		fmt.Printf("      Name:\t%s\n", pkg.Name)
-		fmt.Printf("  Category:\t%s\n", pkg.Category)
-		fmt.Printf("      Arch:\t%s\n", pkg.Arch)
-		fmt.Printf("   Version:\t%s\n", pkg.Version)
-		fmt.Printf("    Vendor:\t%s\n", pkg.Vendor)
-		fmt.Printf("      Desc:\t%s\n", pkg.Desc)
-		fmt.Printf("   Hotline:\t%s\n", pkg.Hotline)
-	} else {
-		fmt.Printf("%s\t%s\t\t%s\n", pkg.Category, pkg.Pkg, pkg.Desc)
-	}
+  for _, pkg := range pkgSlc {
+	  if opts.Long {
+	  	fmt.Printf("   PkgInst:\t%s\n", pkg.PkgInst)
+	  	fmt.Printf("      Name:\t%s\n", pkg.Name)
+	  	fmt.Printf("  Category:\t%s\n", pkg.Category)
+	  	fmt.Printf("      Arch:\t%s\n", pkg.Arch)
+	  	fmt.Printf("   Version:\t%s\n", pkg.Version)
+	  	fmt.Printf("    Vendor:\t%s\n", pkg.Vendor)
+		  fmt.Printf("      Desc:\t%s\n", pkg.Desc)
+		  fmt.Printf("   Hotline:\t%s\n\n", pkg.Hotline)
+	  } else {
+		  fmt.Printf("%s\t%s\t\t%s\n", pkg.Category, pkg.Pkg, pkg.Desc)
+	  }
+  }
 }

@@ -1,18 +1,26 @@
-# The Motoko Package Manager
-Motoko is a set of traditionalist SVR4-compatible package managenment tools, but made in a modernist and cleaner way.  
-I'm making this in order to learn Go and some data structure concepts.  
+# The Pacote Package Manager
+"Pacote" (Portuguese for "package", pronounced  /pɐˈkɔ.tɨ/) is a set of
+SVR4-compatible package managenment tools, but made in a modernist and cleaner
+way.   
+This originally was created as a project with the intent of learning the Go
+programming language and (re)documenting the SVR4 package manager specification,
+but it is really meant to be a solid, modern and safe implementation of the SVR4
+package manager for the 21st century, working as a base for any extensions that
+can be made in any language that supports calling commands from the PATH.
 
-Everything here is a big "TO DO", since I'm still learning the basic concepts of
-Go itself and the SVR4 package manager specification.  
+Everything here is a big "TO DO", since it's part of a really big project and we
+do not have enough workforce to fight in all the fronts simultaniously, so there
+are things that could've been made in some days and that took literal months to
+get done.
 
 ## You can read more about it in READMEs below:  
 * :brazil: [README.pt.markdown (original)](./docs/README.pt.markdown);
 * :us: [README.en.markdown](./docs/README.en.markdown);
 * :jp: [README.jp.markdown (TO DO)](./docs/README.jp.markdown);
-* :taiwan: [README.zh_TW.markdown (TO DO)](./docs/README.zh_TW.markdown).
+* :taiwan: [README.zh\_TW.markdown (TO DO)](./docs/README.zh_TW.markdown).
 
 There is also the official documentation, which is served at
-https://silicon.pindorama.dob.jp/motoko and has its source at the
+https://tabula.pindorama.dob.jp/pacote and has its source at the
 [Silicon Tabula](https://github.com/Projeto-Pindorama/Silicon-Tabula) repository.
 
 ## Quick information: file formats

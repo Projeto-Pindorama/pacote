@@ -8,10 +8,11 @@ but it is really meant to be a solid, modern and safe implementation of the SVR4
 package manager for the 21st century, working as a base for any extensions that
 can be made in any language that supports calling commands from the PATH.
 
-Everything here is a big "TO DO", since it's part of a really big project and we
-do not have enough workforce to fight in all the fronts simultaniously, so there
-are things that could've been made in some days and that took literal months to
-get done.
+Everything here is a big "TO DO", since it's part of a [really big
+project](http://copacabana.pindorama.dob.jp) and we do not have enough workforce
+to fight in all the fronts simultaniously, so there are things that could've been
+made in some days and that took literal months to get done --- not even talking
+about fixes that would need to be made.
 
 ## You can read more about it in READMEs below:  
 * :brazil: [README.pt.markdown (original)](./docs/README.pt.markdown);

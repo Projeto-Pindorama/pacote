@@ -116,4 +116,5 @@ func usage() {
 	fmt.Fprintf(os.Stderr,
 		"usage: %s [-i] [-c class] [path ...]\n",
 			progname)
+	os.Exit(1)
 }

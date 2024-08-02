@@ -6,11 +6,23 @@
 * something like.
 * Temporary reference: http://www.sco.com/developers/devspecs/vol1a.pdf
  */
-package pfmt
+package cmon 
 
 import (
 	"fmt"
 	"io"
+)
+
+const (
+	MM_HALT
+	MM_ERROR
+	MM_WARNING
+	MM_INFO
+	MM_ACTION
+	MM_GET
+	MM_NOGET
+	MM_STD
+	MM_NOSTD
 )
 
 func Pfmt(stream io.Writer, report string, message ...string) {

@@ -1,12 +1,18 @@
 /*
-* meta.go - Get UNIX metadata for files and return in a struct
-*
+ * meta.go - Get UNIX metadata for files and return in a struct
+ *
+ * Copyright (C) 2022-2024: Pindorama
+ *			Luiz Antônio Rangel (takusuman)
+ *			Samuel Brederodes (callsamu)
+ *			João Pedro Vieira (JoaoP-Vieira) 
+ *
+ * SPDX-Licence-Identifier: NCSA
+ * 
  */
 
 package archivum
 
 import (
-	"errors"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -21,10 +27,6 @@ type Metadata struct {
 	Group      string
 	DeviceInfo *DeviceInfo
 }
-
-var (
-	errSLink = errors.New("symbolic links are unsupported")
-)
 
 func Scan(dir OperatingSystemFS, path string) (*Metadata, error) {
 	fi, err := dir.Stat(path)
@@ -59,9 +61,16 @@ func Scan(dir OperatingSystemFS, path string) (*Metadata, error) {
 }
 
 func determineFType(fi os.FileInfo) rune {
-	switch mode := fi.Mode(); {
+	var mode fs.FileMode
+	
+	switch mode = fi.Mode(); {
 	case mode.IsRegular():
-		return 'f'
+		if hardlinks, _ := IsModeHardlink(fi);
+			hardlinks == 0 {
+			return 'f'
+		} else {
+			return 'l'
+		}
 	case mode.IsDir():
 		return 'd'
 	case mode&fs.ModeSymlink != 0:
@@ -76,3 +85,4 @@ func determineFType(fi os.FileInfo) rune {
 		return '?'
 	}
 }
+

@@ -1,3 +1,13 @@
+/*
+ * filesystem.go - UNIX filesystem interfaces 
+ *
+ * Copyright (C) 2022: Pindorama
+ *		Samuel Brederodes (callsamu)
+ *
+ * SPDX-Licence-Identifier: NCSA
+ *
+ */
+
 package archivum
 
 import (

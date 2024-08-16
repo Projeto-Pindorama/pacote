@@ -50,7 +50,12 @@ This project currently implements the following tools:
     <td><tt>pkgproto</tt>(1)</td>
     <td>Generate a <tt>prototype</tt>(4) file for input to the
 <tt>pkgmk</tt>(1) command.</td>
-    <td>W.I.P.; Almost finished</td>
+    <td>W.I.P.; Almost finished, lacks the ability to alias directories properly</td>
+  </tr>
+  <tr>
+    <td><tt>pkginfo</tt>(1)</td>
+    <td>Display software package information.</td>
+    <td>W.I.P.; parser done</td>
   </tr>
 </tbody>
 </table>

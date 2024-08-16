@@ -1,5 +1,5 @@
 /*
- * filesystem.go - UNIX filesystem interfaces 
+ * filesystem.go - UNIX filesystem interfaces
  *
  * Copyright (C) 2022: Pindorama
  *		Samuel Brederodes (callsamu)

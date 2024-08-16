@@ -4,7 +4,7 @@
  * Copyright (C) 2022-2024: Pindorama
  *			Luiz Antônio Rangel (takusuman)
  *			Samuel Brederodes (callsamu)
- *			João Pedro Vieira (JoaoP-Vieira) 
+ *			João Pedro Vieira (JoaoP-Vieira)
  *
  * SPDX-Licence-Identifier: NCSA
  *
@@ -37,7 +37,7 @@ func IsModeHardlink(fi os.FileInfo) (uint64, error) {
 	var nlinks uint64
 	var ok bool
 	var err error
-	var fis *syscall.Stat_t	
+	var fis *syscall.Stat_t
 
 	fis, ok = fi.Sys().(*syscall.Stat_t)
 	if !ok {
@@ -45,13 +45,13 @@ func IsModeHardlink(fi os.FileInfo) (uint64, error) {
 		return 0, err
 	}
 
-	nlinks = uint64(fis.Nlink);
+	nlinks = uint64(fis.Nlink)
 	switch nlinks {
 	/* Normally, s.Nlink being 1
 	 * indicates that it is a
 	 * regular file, so we will
 	 * return zero, which is false. */
-	case 1: 
+	case 1:
 		return 0, nil
 	default:
 		return nlinks, nil

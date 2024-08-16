@@ -4,10 +4,10 @@
  * Copyright (C) 2022-2024: Pindorama
  *			Luiz Antônio Rangel (takusuman)
  *			Samuel Brederodes (callsamu)
- *			João Pedro Vieira (JoaoP-Vieira) 
+ *			João Pedro Vieira (JoaoP-Vieira)
  *
  * SPDX-Licence-Identifier: NCSA
- * 
+ *
  */
 
 package archivum
@@ -62,11 +62,10 @@ func Scan(dir OperatingSystemFS, path string) (*Metadata, error) {
 
 func determineFType(fi os.FileInfo) rune {
 	var mode fs.FileMode
-	
+
 	switch mode = fi.Mode(); {
 	case mode.IsRegular():
-		if hardlinks, _ := IsModeHardlink(fi);
-			hardlinks == 0 {
+		if hardlinks, _ := IsModeHardlink(fi); hardlinks == 0 {
 			return 'f'
 		} else {
 			return 'l'
@@ -85,4 +84,3 @@ func determineFType(fi os.FileInfo) rune {
 		return '?'
 	}
 }
-
